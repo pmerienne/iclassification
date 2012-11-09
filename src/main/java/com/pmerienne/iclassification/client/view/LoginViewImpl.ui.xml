@@ -1,0 +1,46 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:w="urn:import:com.pmerienne.iclassification.client.widget"
+	xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
+	<ui:style>
+		
+	</ui:style>
+	<g:HTMLPanel>
+		<header class="subhead">
+			<h1>Welcome to iclassification</h1>
+		</header>
+
+		<b:Form type="HORIZONTAL">
+			<g:Label>Log in</g:Label>
+			<b:Fieldset>
+				<b:ControlGroup>
+					<b:ControlLabel>Login</b:ControlLabel>
+					<b:Controls>
+						<b:TextBox ui:field="login" />
+					</b:Controls>
+				</b:ControlGroup>
+
+				<b:ControlGroup>
+					<b:ControlLabel>Password</b:ControlLabel>
+					<b:Controls>
+						<b:PasswordTextBox ui:field="password" />
+					</b:Controls>
+				</b:ControlGroup>
+
+				<b:ControlGroup>
+					<b:ControlLabel>Worspace</b:ControlLabel>
+					<b:Controls>
+						<w:WorkspaceListBox ui:field="workspace" />
+					</b:Controls>
+				</b:ControlGroup>
+			</b:Fieldset>
+		</b:Form>
+		
+		<b:Well>
+			<b:Button ui:field="createWorkspaceButton" text="Create new worskspace" />
+			<b:Button ui:field="loginButton" type="PRIMARY" icon="CHEVRON_RIGHT" text="Go"/>
+		</b:Well>
+		
+		<w:CreateWorkspaceModal ui:field="createWorkspaceModal" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

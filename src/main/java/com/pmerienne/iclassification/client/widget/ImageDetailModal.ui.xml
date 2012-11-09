@@ -1,0 +1,21 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+	xmlns:w="urn:import:com.pmerienne.iclassification.client.widget">
+	<ui:style>
+		
+	</ui:style>
+	<g:HTMLPanel>
+		<b:Well>
+			<b:ListBox ui:field="imageTypeListBox" />
+		</b:Well>
+
+		<g:HTMLPanel ui:field="imageContainer" />
+
+		<b:ModalFooter>
+			<b:Button ui:field="applyButton">Apply</b:Button>
+			<b:Button ui:field="saveButton" icon="OK" type="PRIMARY">Save</b:Button>
+		</b:ModalFooter>
+
+	</g:HTMLPanel>
+</ui:UiBinder> 

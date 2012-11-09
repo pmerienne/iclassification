@@ -1,0 +1,20 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		
+	</ui:style>
+	<g:HTMLPanel>
+
+		<h2><g:InlineLabel ui:field="state"/> build <small><g:InlineLabel ui:field="date" /></small></h2>
+
+		<h3>Feature configurations</h3>
+		<g:HTMLPanel ui:field="featureConfigurationsContainer"/>
+		
+		<h3>Evaluation</h3>
+		<g:HTMLPanel ui:field="evaluationPanel">
+			This classifier has a success rate of <g:InlineLabel ui:field="successRate" /> % (<g:InlineLabel ui:field="errorCount" /> errors, <g:InlineLabel ui:field="successCount" /> success).
+		</g:HTMLPanel>
+		
+	</g:HTMLPanel>
+</ui:UiBinder> 

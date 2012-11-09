@@ -1,0 +1,20 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
+	<ui:style>
+		
+	</ui:style>
+	<g:HTMLPanel>
+		
+			<b:Form ui:field="form" method="post" encoding="multipart/form-data">
+				<g:HTMLPanel>
+					Select a zip file :
+					<input type="file" name="file" size="45" />
+					<input ui:field="workspaceInput" type="hidden" name="workspaceId" />
+					<b:Button ui:field="importButton" type="PRIMARY">
+						Import
+					</b:Button>
+				</g:HTMLPanel>
+		</b:Form>
+	</g:HTMLPanel>
+</ui:UiBinder> 

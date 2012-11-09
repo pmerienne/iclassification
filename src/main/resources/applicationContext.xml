@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:cloud="http://schema.cloudfoundry.org/spring" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.7.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
+		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.pmerienne.iclassification.server.repository" />
+	<context:component-scan base-package="com.pmerienne.iclassification.server.core" />
+	<context:component-scan base-package="com.pmerienne.iclassification.server.service" />
+	<context:component-scan base-package="com.pmerienne.iclassification.server.rest" />
+
+	<!-- Mongo repositories -->
+	<mongo:repositories base-package="com.pmerienne.iclassification.server.repository" mongo-template-ref="mongoTemplate" />
+
+	<!-- Mongodb configuration -->
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="mongoDbFactory" />
+	</bean>
+
+	<!-- Check system properties first, before trying the properties defined 
+		in iclassification.properties. Additional properties can be defined in a 
+		file named iclassification-local.properties which must be on the classpath -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath*:iclassification.properties</value>
+				<value>classpath*:iclassification-local.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<mongo:mongo write-concern="SAFE" />
+	<mongo:db-factory id="mongoDbFactory" mongo-ref="mongo" dbname="${db.name}" host="${db.host}" port="${db.port}" username="${db.username}" password="${db.password}" />
+
+</beans>
