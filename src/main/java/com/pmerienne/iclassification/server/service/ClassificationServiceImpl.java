@@ -23,9 +23,6 @@ public class ClassificationServiceImpl implements ClassificationService {
 	@Autowired
 	private DictionaryService dictionaryService;
 
-	@Autowired
-	private ImageLabelService imageLabelService;
-
 	@Override
 	public ClassificationEvaluation evaluate(Dataset dataset, List<Dictionary> dictionaries) throws ClassificationException {
 		LOGGER.info("Evaluating classification with " + dictionaries.size() + " dictionaries");

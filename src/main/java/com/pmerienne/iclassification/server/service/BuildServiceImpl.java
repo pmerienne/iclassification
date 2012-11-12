@@ -42,9 +42,6 @@ public class BuildServiceImpl implements BuildService {
 	private ImageRepository imageRepository;
 
 	@Autowired
-	private DatasetService datasetService;
-
-	@Autowired
 	private DictionaryService dictionaryService;
 
 	@Autowired
@@ -110,7 +107,8 @@ public class BuildServiceImpl implements BuildService {
 		// Build a dictionary for each label/feature pair
 		for (FeatureConfiguration fc : build.getFeatureConfigurations()) {
 			for (ImageLabel Label : availableLabels) {
-				List<ImageMetadata> imagesWithLabel = Lists.newArrayList(Iterables.filter(training, new SameLabelPredicate(Label)));
+				List<ImageMetadata> imagesWithLabel = Lists.newArrayList(Iterables.filter(training,
+						new SameLabelPredicate(Label)));
 				if (imagesWithLabel != null && !imagesWithLabel.isEmpty()) {
 					Dictionary dictionary = this.dictionaryService.createDictionary(fc, Label, imagesWithLabel);
 					dictionaries.add(dictionary);
@@ -155,17 +153,14 @@ public class BuildServiceImpl implements BuildService {
 		evaluationsImages.addAll(allFiles.subList(splitIndex.intValue(), allFiles.size()));
 
 		Dataset dataset = new Dataset(trainingImages, evaluationsImages);
-		LOGGER.info("Dataset created (training : " + trainingImages.size() + ", evaluation : " + evaluationsImages.size() + ")");
+		LOGGER.info("Dataset created (training : " + trainingImages.size() + ", evaluation : "
+				+ evaluationsImages.size() + ")");
 
 		return dataset;
 	}
 
 	public void setBuildRepository(BuildRepository buildRepository) {
 		this.buildRepository = buildRepository;
-	}
-
-	public void setDatasetService(DatasetService datasetService) {
-		this.datasetService = datasetService;
 	}
 
 	public void setDictionaryService(DictionaryService dictionaryService) {

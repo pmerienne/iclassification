@@ -59,7 +59,8 @@ public class ImageSegmenter {
 			// Check crop zone
 			if (cropZone == null) {
 				Dimension imageSize = ImageUtils.getImageSize(inputFile);
-				cropZone = new CropZone(1, 1, (int) imageSize.getWidth(), (int) imageSize.getHeight());
+				cropZone = new CropZone((int) imageSize.getWidth() / 4, (int) imageSize.getWidth() / 4,
+						(int) imageSize.getWidth() / 2, (int) imageSize.getHeight() / 2);
 			}
 
 			// Load input image

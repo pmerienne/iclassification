@@ -42,9 +42,6 @@ public class ImageServiceImpl implements ImageService {
 	private FileRepository fileRepository;
 
 	@Autowired
-	private DatasetService datasetService;
-
-	@Autowired
 	private FeatureService featureService;
 
 	@Autowired
@@ -60,7 +57,8 @@ public class ImageServiceImpl implements ImageService {
 	public ImageMetadata create(Workspace workspace, File file, ImageLabel label) {
 		String filename = this.fileRepository.save(file);
 		Dimension imageSize = ImageUtils.getImageSize(file);
-		CropZone cropZone = new CropZone(1, 1, (int) imageSize.getWidth(), (int) imageSize.getHeight());
+		CropZone cropZone = new CropZone((int) imageSize.getWidth() / 4, (int) imageSize.getWidth() / 4,
+				(int) imageSize.getWidth() / 2, (int) imageSize.getHeight() / 2);
 
 		ImageMetadata imageFile = new ImageMetadata(filename, workspace, label, cropZone);
 		this.imageRepository.save(imageFile);
@@ -178,7 +176,8 @@ public class ImageServiceImpl implements ImageService {
 
 		// Check in repo that image was already segmented
 		CropZone cropZone = imageMetadata.getCropZone();
-		SegmentedImage segmentedImage = this.segmentedImageRepository.findByOriginalImageAndCropZone(imageMetadata, cropZone);
+		SegmentedImage segmentedImage = this.segmentedImageRepository.findByOriginalImageAndCropZone(imageMetadata,
+				cropZone);
 
 		if (segmentedImage == null) {
 			File inputFile = this.fileRepository.get(imageMetadata.getFilename());
@@ -233,8 +232,9 @@ public class ImageServiceImpl implements ImageService {
 
 		// Remove segmented file
 		SegmentedImage segmentedImage = this.segmentedImageRepository.findByOriginalImage(imageMetadata);
-		this.segmentedImageRepository.delete(segmentedImage);
-
+		if (segmentedImage != null) {
+			this.segmentedImageRepository.delete(segmentedImage);
+		}
 		// Save changes
 		this.imageRepository.save(imageMetadata);
 	}

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.openimaj.ml.clustering.ByteCentroidsResult;
 import org.openimaj.ml.clustering.kmeans.fast.FastByteKMeans;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.pmerienne.iclassification.server.repository.DictionaryRepository;
-import com.pmerienne.iclassification.server.repository.ImageRepository;
 import com.pmerienne.iclassification.server.util.SiftFeatureUtils;
 import com.pmerienne.iclassification.shared.model.Dictionary;
 import com.pmerienne.iclassification.shared.model.Feature;
@@ -30,16 +30,14 @@ public class DictionaryServiceImpl implements DictionaryService {
 	private final static Integer DEFAULT_KMEANS_ITERATION = 1;
 
 	@Autowired
-	private ImageRepository imageRepository;
-
-	@Autowired
 	private DictionaryRepository dictionaryRepository;
 
 	@Autowired
 	private FeatureService featureService;
 
 	@Override
-	public Dictionary createDictionary(FeatureConfiguration featureConfiguration, ImageLabel imageLabel, List<ImageMetadata> imageMetadatas) {
+	public Dictionary createDictionary(FeatureConfiguration featureConfiguration, ImageLabel imageLabel,
+			List<ImageMetadata> imageMetadatas) {
 		// Check image metadata
 		for (ImageMetadata imageMetadata : imageMetadatas) {
 			if (!imageLabel.equals(imageMetadata.getLabel())) {
@@ -56,13 +54,10 @@ public class DictionaryServiceImpl implements DictionaryService {
 		LOGGER.info("Clustering " + vocabulary.length + " features into " + dictionarySize + " words");
 
 		FastByteKMeans cluster = new FastByteKMeans(vocabulary.length, dictionarySize, true, DEFAULT_KMEANS_ITERATION);
-		boolean trainingResult = cluster.cluster(vocabulary);
-		if (!trainingResult) {
-			throw new RuntimeException("An overflow may have occurred during vocabulary clusterization");
-		}
+		ByteCentroidsResult byteCentroidsResult = cluster.cluster(vocabulary);
 
 		// Create and save dictionary
-		List<Feature> centroids = SiftFeatureUtils.toFeatureList(cluster.getCentroids());
+		List<Feature> centroids = SiftFeatureUtils.toFeatureList(byteCentroidsResult.getCentroids());
 		Dictionary dictionary = new Dictionary(imageLabel, featureConfiguration, centroids);
 		this.dictionaryRepository.save(dictionary);
 
@@ -73,7 +68,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 	public Map<Dictionary, Double> getDictionaryResponses(List<Dictionary> dictionaries, ImageMetadata imageMetadata) {
 		Map<Dictionary, Double> dictionaryResponses = new HashMap<Dictionary, Double>();
 
-		Multimap<FeatureConfiguration, Dictionary> mappedDictionaries = this.mapDictionariesByFeatureConfiguration(dictionaries);
+		Multimap<FeatureConfiguration, Dictionary> mappedDictionaries = this
+				.mapDictionariesByFeatureConfiguration(dictionaries);
 
 		// Fetch dictionary responses for each feature configuration
 		for (FeatureConfiguration fc : mappedDictionaries.keySet()) {
@@ -85,7 +81,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 		return dictionaryResponses;
 	}
 
-	protected Map<Dictionary, Double> getFeatureResponses(Collection<Dictionary> dictionaries, ImageMetadata imageMetadata) {
+	protected Map<Dictionary, Double> getFeatureResponses(Collection<Dictionary> dictionaries,
+			ImageMetadata imageMetadata) {
 		FeatureConfiguration featureConfiguration = dictionaries.iterator().next().getFeatureConfiguration();
 
 		// Init response
@@ -110,8 +107,9 @@ public class DictionaryServiceImpl implements DictionaryService {
 		byte[][] centroids = SiftFeatureUtils.toByteArray(allCentroids);
 
 		// Assign features to centroids
-		FastByteKMeans cluster = new FastByteKMeans(centroids, FastByteKMeans.DEFAULT_NTREES, FastByteKMeans.DEFAULT_NCHECKS);
-		int[] assignedClusterIndexes = cluster.defaultHardAssigner().assign(features);
+		ByteCentroidsResult byteCentroidsResult = new ByteCentroidsResult();
+		byteCentroidsResult.centroids = centroids;
+		int[] assignedClusterIndexes = byteCentroidsResult.defaultHardAssigner().assign(features);
 
 		// Count number of assigned feature by dictionary
 		for (int assignedClusterIndex : assignedClusterIndexes) {
@@ -145,7 +143,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 		return vocabulary;
 	}
 
-	protected Multimap<FeatureConfiguration, Dictionary> mapDictionariesByFeatureConfiguration(List<Dictionary> dictionaries) {
+	protected Multimap<FeatureConfiguration, Dictionary> mapDictionariesByFeatureConfiguration(
+			List<Dictionary> dictionaries) {
 		Multimap<FeatureConfiguration, Dictionary> mappedDictionaries = ArrayListMultimap.create();
 		for (Dictionary dictionary : dictionaries) {
 			mappedDictionaries.put(dictionary.getFeatureConfiguration(), dictionary);

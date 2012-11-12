@@ -25,7 +25,6 @@ public class BuildServiceImplTest {
 	private BuildServiceImpl buildServiceImpl;
 
 	private BuildRepository buildRepository;
-	private DatasetService datasetService;
 	private DictionaryService dictionaryService;
 	private ClassificationService classificationService;
 	private WorkspaceService workspaceService;
@@ -37,9 +36,6 @@ public class BuildServiceImplTest {
 
 		buildRepository = mock(BuildRepository.class);
 		buildServiceImpl.setBuildRepository(buildRepository);
-
-		datasetService = mock(DatasetService.class);
-		buildServiceImpl.setDatasetService(datasetService);
 
 		dictionaryService = mock(DictionaryService.class);
 		buildServiceImpl.setDictionaryService(dictionaryService);

@@ -48,7 +48,8 @@ public class BuildServiceIntegrationTest extends IntegrationTest {
 		ImageLabel lilyvalley = new ImageLabel("lilyvalley", "lilyvalley");
 		ImageLabel snowdrop = new ImageLabel("snowdrop", "snowdrop");
 		ImageLabel tiggerlily = new ImageLabel("tiggerlily", "tiggerlily");
-		this.imageLabelRepository.save(Arrays.asList(bluebell, crocus, daffodil, iris, lilyvalley, snowdrop, tiggerlily));
+		this.imageLabelRepository.save(Arrays
+				.asList(bluebell, crocus, daffodil, iris, lilyvalley, snowdrop, tiggerlily));
 
 		// Load images
 		this.imageService.importFromZip(this.testWorkspace, new FileInputStream(ZIP_FILE));
@@ -62,6 +63,7 @@ public class BuildServiceIntegrationTest extends IntegrationTest {
 		Build build = this.buildService.createBuild(this.testWorkspace, featureConfigurations);
 		assertNotNull(build);
 
-		Thread.sleep(20 * 60 * 1000);
+		// Wait 3 minutes
+		 Thread.sleep(3 * 60 * 1000);
 	}
 }

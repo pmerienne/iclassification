@@ -46,10 +46,11 @@ public class FeatureServiceImpl implements FeatureService {
 			imageMetadata = this.imageRepository.findOne(imageMetadata.getFilename());
 			File file = this.fileRepository.get(imageMetadata.getFilename());
 
-			features = this.featureRepository.findByImageMetadataAndTypeAndUseCropZone(imageMetadata, fc.getType(), fc.isUseCropZone());
+			features = this.featureRepository.findByImageMetadataAndTypeAndUseCropZone(imageMetadata, fc.getType(),
+					fc.isUseCropZone());
 
 			// If the features doesn't exists, we compute it!
-			if (features == null) {
+			if (features == null || features.isEmpty()) {
 				LOGGER.info("Computing features (" + fc + ") for " + imageMetadata);
 
 				// Segment image if needed
@@ -94,6 +95,8 @@ public class FeatureServiceImpl implements FeatureService {
 	@Override
 	public void clearFeatures(ImageMetadata imageMetadata) {
 		List<Feature> features = this.featureRepository.findByImageMetadata(imageMetadata);
-		this.featureRepository.delete(features);
+		if (features != null && !features.isEmpty()) {
+			this.featureRepository.delete(features);
+		}
 	}
 }
