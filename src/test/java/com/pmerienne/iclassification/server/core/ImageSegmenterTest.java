@@ -19,7 +19,7 @@ public class ImageSegmenterTest {
 	@Test
 	public void testSegment() throws IOException {
 		// Test
-		CropZone cropZone = new CropZone(100, 70, 140, 180);
+		CropZone cropZone = new CropZone(10, 10, 305, 480);
 		File actualFile = this.imageSegmenter.segment(TEST_IMAGE, cropZone);
 		System.out.println(actualFile);
 

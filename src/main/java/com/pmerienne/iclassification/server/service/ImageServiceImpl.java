@@ -19,8 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pmerienne.iclassification.server.core.ImageSegmenter;
+import com.pmerienne.iclassification.server.core.SegmentedImage;
 import com.pmerienne.iclassification.server.repository.FileRepository;
 import com.pmerienne.iclassification.server.repository.ImageRepository;
+import com.pmerienne.iclassification.server.repository.SegmentedImageRepository;
 import com.pmerienne.iclassification.server.util.ImageUtils;
 import com.pmerienne.iclassification.server.util.ZipUtils;
 import com.pmerienne.iclassification.shared.model.CropZone;
@@ -50,6 +52,9 @@ public class ImageServiceImpl implements ImageService {
 
 	@Autowired
 	private ImageSegmenter imageSegmenter;
+
+	@Autowired
+	private SegmentedImageRepository segmentedImageRepository;
 
 	@Override
 	public ImageMetadata create(Workspace workspace, File file, ImageLabel label) {
@@ -169,10 +174,25 @@ public class ImageServiceImpl implements ImageService {
 
 	@Override
 	public File getSegmentedFile(ImageMetadata imageMetadata) throws IOException {
-		CropZone cropZone = imageMetadata.getCropZone();
-		File file = this.fileRepository.get(imageMetadata.getFilename());
+		File segmentedFile = null;
 
-		File segmentedFile = this.imageSegmenter.segment(file, cropZone);
+		// Check in repo that image was already segmented
+		CropZone cropZone = imageMetadata.getCropZone();
+		SegmentedImage segmentedImage = this.segmentedImageRepository.findByOriginalImageAndCropZone(imageMetadata, cropZone);
+
+		if (segmentedImage == null) {
+			File inputFile = this.fileRepository.get(imageMetadata.getFilename());
+
+			// Segment file
+			segmentedFile = this.imageSegmenter.segment(inputFile, cropZone);
+
+			// Save segmented file
+			String filename = this.fileRepository.save(segmentedFile);
+			segmentedImage = new SegmentedImage(filename, imageMetadata, cropZone);
+			this.segmentedImageRepository.save(segmentedImage);
+		}
+
+		segmentedFile = this.fileRepository.get(segmentedImage.getFilename());
 		return segmentedFile;
 	}
 
@@ -207,7 +227,15 @@ public class ImageServiceImpl implements ImageService {
 	@Override
 	public void setCropZone(Workspace workspace, ImageMetadata imageMetadata, CropZone cropZone) {
 		imageMetadata.setCropZone(cropZone);
+
+		// Remove calculated features
 		this.featureService.clearFeatures(imageMetadata);
+
+		// Remove segmented file
+		SegmentedImage segmentedImage = this.segmentedImageRepository.findByOriginalImage(imageMetadata);
+		this.segmentedImageRepository.delete(segmentedImage);
+
+		// Save changes
 		this.imageRepository.save(imageMetadata);
 	}
 

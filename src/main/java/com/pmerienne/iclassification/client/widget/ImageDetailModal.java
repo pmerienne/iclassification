@@ -6,12 +6,10 @@ import com.github.gwtbootstrap.client.ui.Modal;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.pmerienne.iclassification.client.utils.ImageUtils;
@@ -60,15 +58,11 @@ public class ImageDetailModal extends Modal {
 		});
 	}
 
-	@UiHandler("applyButton")
-	protected void onApplyClicked(ClickEvent event) {
-		this.imageTypeListBox.setSelectedIndex(0);
-		this.loadImage();
-	}
-
 	public void setImageMetadata(ImageMetadata imageMetadata) {
 		this.imageMetadata = imageMetadata;
 		this.setTitle(imageMetadata.getFilename() + " (" + imageMetadata.getLabel().getName() + ") details");
+
+		this.imageTypeListBox.setSelectedIndex(0);
 		this.loadImage();
 	}
 

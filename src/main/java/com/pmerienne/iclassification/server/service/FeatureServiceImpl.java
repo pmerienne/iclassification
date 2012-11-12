@@ -9,12 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pmerienne.iclassification.server.core.FeatureExtractor;
-import com.pmerienne.iclassification.server.core.ImageSegmenter;
 import com.pmerienne.iclassification.server.core.SiftFeatureExtractor;
 import com.pmerienne.iclassification.server.repository.FeatureRepository;
 import com.pmerienne.iclassification.server.repository.FileRepository;
 import com.pmerienne.iclassification.server.repository.ImageRepository;
-import com.pmerienne.iclassification.shared.model.CropZone;
 import com.pmerienne.iclassification.shared.model.Feature;
 import com.pmerienne.iclassification.shared.model.FeatureConfiguration;
 import com.pmerienne.iclassification.shared.model.ImageMetadata;
@@ -37,7 +35,7 @@ public class FeatureServiceImpl implements FeatureService {
 	private SiftFeatureExtractor siftFeatureExtractor;
 
 	@Autowired
-	private ImageSegmenter imageSegmenter;
+	private ImageService imageService;
 
 	@Override
 	public List<Feature> getFeatures(ImageMetadata imageMetadata, FeatureConfiguration fc) {
@@ -56,8 +54,7 @@ public class FeatureServiceImpl implements FeatureService {
 
 				// Segment image if needed
 				if (fc.isUseCropZone()) {
-					CropZone cropZone = imageMetadata.getCropZone();
-					file = this.imageSegmenter.segment(file, cropZone);
+					file = this.imageService.getSegmentedFile(imageMetadata);
 				}
 
 				features = this.computeFeatures(file, fc);

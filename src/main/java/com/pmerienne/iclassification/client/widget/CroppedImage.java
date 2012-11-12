@@ -25,7 +25,9 @@ public class CroppedImage extends Image {
 	@Override
 	protected void onDetach() {
 		Element element = this.getElement();
-		this.releaseCroppping(element);
+		if (element != null) {
+			this.releaseCroppping(element);
+		}
 		super.onDetach();
 	}
 
@@ -74,7 +76,7 @@ public class CroppedImage extends Image {
 		this.cropZone = cropZone;
 	}
 
-	public native void updateJavascriptCropZone(JavaScriptObject jCropApi, int x, int y, int width, int height) /*-{
+	protected native void updateJavascriptCropZone(JavaScriptObject jCropApi, int x, int y, int width, int height) /*-{
 		var bounds = [ x, y, x + width, y + height ];
 		jCropApi.setSelect(bounds);
 	}-*/;

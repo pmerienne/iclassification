@@ -64,7 +64,7 @@ public class ImagesViewImpl extends Composite implements ImagesView {
 	private Map<ImageMetadata, ImageThumbnail> visibleImages = new HashMap<ImageMetadata, ImageThumbnail>();
 
 	private int currentIndex = 0;
-	private final static int STEP = 20;
+	private final static int STEP = 5;
 
 	public ImagesViewImpl() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -114,6 +114,10 @@ public class ImagesViewImpl extends Composite implements ImagesView {
 			}
 
 			this.currentIndex += STEP;
+
+			if (ImagesViewImpl.this.scrollPanel.getVerticalScrollPosition() == ImagesViewImpl.this.scrollPanel.getMaximumVerticalScrollPosition()) {
+				this.showMoreImages();
+			}
 		}
 	}
 
