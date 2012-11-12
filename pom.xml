@@ -31,46 +31,51 @@
 	</properties>
 
 	<repositories>
+		<repository>
+			<id>nexus-pmerienne</id>
+			<url>http://nexus-pmerienne.rhcloud.com/nexus/content/groups/public/</url>
+		</repository>
+
 		<!-- For developing against latest Spring milestones -->
-		<repository>
-			<id>spring-maven-release</id>
-			<name>Spring Maven Release Repository</name>
-			<url>http://maven.springframework.org/release</url>
-		</repository>
-		<repository>
-			<id>spring-maven-milestone</id>
-			<name>Spring Maven Milestone Repository</name>
-			<url>http://maven.springframework.org/milestone</url>
-		</repository>
+		<!-- <repository> -->
+		<!-- <id>spring-maven-release</id> -->
+		<!-- <name>Spring Maven Release Repository</name> -->
+		<!-- <url>http://maven.springframework.org/release</url> -->
+		<!-- </repository> -->
+		<!-- <repository> -->
+		<!-- <id>spring-maven-milestone</id> -->
+		<!-- <name>Spring Maven Milestone Repository</name> -->
+		<!-- <url>http://maven.springframework.org/milestone</url> -->
+		<!-- </repository> -->
 
-		<repository>
-			<id>fusesource-snapshots</id>
-			<name>Fusesource Snapshots</name>
-			<url>http://repo.fusesource.com/nexus/content/repositories/snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
+		<!-- <repository> -->
+		<!-- <id>fusesource-snapshots</id> -->
+		<!-- <name>Fusesource Snapshots</name> -->
+		<!-- <url>http://repo.fusesource.com/nexus/content/repositories/snapshots</url> -->
+		<!-- <snapshots> -->
+		<!-- <enabled>true</enabled> -->
+		<!-- </snapshots> -->
+		<!-- <releases> -->
+		<!-- <enabled>false</enabled> -->
+		<!-- </releases> -->
+		<!-- </repository> -->
 
-		<repository>
-			<id>Octopussy OpenIMAJ maven repository</id>
-			<url>http://octopussy.ecs.soton.ac.uk/content/repositories/releases/</url>
-		</repository>
+		<!-- <repository> -->
+		<!-- <id>Octopussy OpenIMAJ maven repository</id> -->
+		<!-- <url>http://octopussy.ecs.soton.ac.uk/content/repositories/releases/</url> -->
+		<!-- </repository> -->
 
 		<!-- For gwt-bootstrap -->
-		<repository>
-			<id>sonatype</id>
-			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
+		<!-- <repository> -->
+		<!-- <id>sonatype</id> -->
+		<!-- <url>http://oss.sonatype.org/content/repositories/snapshots</url> -->
+		<!-- <snapshots> -->
+		<!-- <enabled>true</enabled> -->
+		<!-- </snapshots> -->
+		<!-- <releases> -->
+		<!-- <enabled>false</enabled> -->
+		<!-- </releases> -->
+		<!-- </repository> -->
 	</repositories>
 
 	<build>
@@ -152,7 +157,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
 
 	<profiles>
 		<profile>
@@ -310,9 +314,9 @@
 
 		<!-- Weka for svm classification -->
 		<dependency>
-			<groupId>org.dmilne</groupId>
-			<artifactId>weka-wrapper</artifactId>
-			<version>0.0.1</version>
+			<groupId>nz.ac.waikato.cms.weka</groupId>
+			<artifactId>weka-stable</artifactId>
+			<version>3.6.6</version>
 		</dependency>
 
 		<!-- JavaCv for grapcut segmenter -->
@@ -320,22 +324,23 @@
 			<groupId>org.javacv</groupId>
 			<artifactId>javacpp</artifactId>
 			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/javacpp.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.javacv</groupId>
 			<artifactId>javacv</artifactId>
 			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/javacv.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.javacv</groupId>
-			<artifactId>javacv-linux</artifactId>
+			<artifactId>javacv-linux-x86_64</artifactId>
 			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/javacv-linux-x86_64.jar</systemPath>
+		</dependency>
+
+		<!-- Siox for siox segmenter -->
+		<dependency>
+			<groupId>org.siox</groupId>
+			<artifactId>siox-api</artifactId>
+			<version>1.0</version>
 		</dependency>
 
 		<!-- Conteneur : Spring Framework -->
