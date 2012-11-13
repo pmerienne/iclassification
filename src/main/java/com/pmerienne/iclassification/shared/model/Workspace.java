@@ -1,17 +1,12 @@
 package com.pmerienne.iclassification.shared.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -25,11 +20,6 @@ public class Workspace implements Serializable {
 	private String id;
 
 	private String name;
-
-	@DBRef
-	@XmlTransient
-	@JsonIgnore
-	private List<Build> builds = new ArrayList<Build>();
 
 	public Workspace() {
 		super();
@@ -60,14 +50,6 @@ public class Workspace implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<Build> getBuilds() {
-		return builds;
-	}
-
-	public void setBuilds(List<Build> builds) {
-		this.builds = builds;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.pmerienne.iclassification.shared.model.Feature;
 
+
 public class SiftFeatureExtractorTest {
 
 	@Test

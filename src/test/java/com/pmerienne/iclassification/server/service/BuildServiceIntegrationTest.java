@@ -22,10 +22,7 @@ import com.pmerienne.iclassification.shared.model.ImageLabel;
 public class BuildServiceIntegrationTest extends IntegrationTest {
 
 	private final static File ZIP_FILE = new File("src/test/resources/data/dataset-flowers.min.zip");
-	// private final static File ZIP_FILE = new
-	// File("src/test/resources/data/dataset-flowers.zip");
-	// private final static File ZIP_FILE = new
-	// File("src/test/resources/data/dataset-flowers.segmented.zip");
+//	private final static File ZIP_FILE = new File("/data/iclassification/dataset/flowers/flowers.zip");
 
 	@Autowired
 	private BuildService buildService;

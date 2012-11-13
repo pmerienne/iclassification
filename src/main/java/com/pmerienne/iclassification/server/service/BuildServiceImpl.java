@@ -67,20 +67,21 @@ public class BuildServiceImpl implements BuildService {
 	}
 
 	@Override
+	public List<Build> findByWorkspace(Workspace workspace) {
+		String workspaceId = workspace.getId();
+		List<Build> builds = this.buildRepository.findByWorkspaceId(workspaceId);
+		return builds;
+	}
+
+	@Override
 	public void delete(Build build) {
 		this.buildRepository.delete(build);
 	}
 
 	@Override
 	public Build createBuild(final Workspace workspace, final List<FeatureConfiguration> featureConfigurations) {
-		// TODO fetch from DAO
-		List<ImageLabel> imageLabels = this.imageLabelService.findAll();
-
-		final Build build = new Build(imageLabels, featureConfigurations);
-		workspace.getBuilds().add(build);
-
+		final Build build = new Build(workspace, featureConfigurations);
 		this.buildRepository.save(build);
-		this.workspaceService.save(workspace);
 
 		this.executorService.execute(new Runnable() {
 			@Override
@@ -103,7 +104,7 @@ public class BuildServiceImpl implements BuildService {
 		build.setState(State.CREATING_DICTIONARIES);
 		this.buildRepository.save(build);
 
-		List<ImageLabel> availableLabels = build.getImageLabels();
+		List<ImageLabel> availableLabels = this.imageLabelService.findAll();
 		List<ImageMetadata> training = dataset.getTrainingImages();
 		List<Dictionary> dictionaries = new ArrayList<Dictionary>();
 
@@ -144,7 +145,7 @@ public class BuildServiceImpl implements BuildService {
 	}
 
 	protected Dataset createDataset(Workspace workspace, double percent) {
-		List<ImageMetadata> allFiles = this.imageRepository.findByWorkspace(workspace);
+		List<ImageMetadata> allFiles = this.imageRepository.findByWorkspaceId(workspace.getId());
 		Collections.shuffle(allFiles);
 
 		List<ImageMetadata> trainingImages = new ArrayList<ImageMetadata>();

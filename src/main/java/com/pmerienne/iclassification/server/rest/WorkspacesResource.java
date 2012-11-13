@@ -107,7 +107,7 @@ public class WorkspacesResource {
 			throw new IllegalArgumentException("Workspace " + workspaceId + " not found");
 		}
 
-		List<Build> builds = workspace.getBuilds();
+		List<Build> builds = this.buildService.findByWorkspace(workspace);
 		return builds;
 	}
 }

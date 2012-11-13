@@ -16,7 +16,7 @@ import org.openimaj.image.feature.local.engine.DoGSIFTEngineOptions;
 import org.openimaj.image.feature.local.keypoints.Keypoint;
 import org.springframework.stereotype.Component;
 
-import com.pmerienne.iclassification.server.util.SiftFeatureUtils;
+import com.pmerienne.iclassification.server.util.FeatureUtils;
 import com.pmerienne.iclassification.shared.model.Feature;
 
 @Component
@@ -29,7 +29,7 @@ public class SiftFeatureExtractor implements FeatureExtractor {
 			InputStream is = new FileInputStream(file);
 
 			LocalFeatureList<Keypoint> siftKeypoints = this.getSiftFeatures(is);
-			features = SiftFeatureUtils.keypointsToFeatures(siftKeypoints);
+			features = FeatureUtils.keypointsToFeatures(siftKeypoints);
 		} catch (IOException ioe) {
 			throw new IllegalArgumentException("Unable to get sift features.", ioe);
 		}

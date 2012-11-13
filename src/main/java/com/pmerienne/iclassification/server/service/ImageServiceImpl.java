@@ -58,9 +58,19 @@ public class ImageServiceImpl implements ImageService {
 
 	@Override
 	public ImageMetadata create(Workspace workspace, File file, ImageLabel label) {
+		if (workspace == null) {
+			throw new IllegalArgumentException("Cannot import file " + file + " : workskace must not be null");
+		}
+		if (file == null) {
+			throw new IllegalArgumentException("Cannot import file : file must not be null");
+		}
+		if (label == null) {
+			throw new IllegalArgumentException("Cannot import file " + file + " :  label must not be null");
+		}
+
 		String filename = this.fileRepository.save(file);
 		Dimension imageSize = ImageUtils.getImageSize(file);
-		CropZone cropZone = new CropZone(1, 1, (int) imageSize.getWidth(), (int) imageSize.getHeight());
+		CropZone cropZone = CropZone.getDefault((int) imageSize.getWidth(), (int) imageSize.getHeight());
 
 		ImageMetadata imageFile = new ImageMetadata(filename, workspace, label, cropZone);
 		this.imageRepository.save(imageFile);
@@ -140,7 +150,7 @@ public class ImageServiceImpl implements ImageService {
 
 	@Override
 	public void delete(Workspace workspace, String filename) {
-		ImageMetadata imageMetadata = this.imageRepository.findByWorkspaceAndFilename(workspace, filename);
+		ImageMetadata imageMetadata = this.imageRepository.findByWorkspaceIdAndFilename(workspace.getId(), filename);
 		this.imageRepository.delete(imageMetadata);
 	}
 
@@ -151,19 +161,19 @@ public class ImageServiceImpl implements ImageService {
 
 	@Override
 	public List<ImageMetadata> find(Workspace workspace) {
-		List<ImageMetadata> images = this.imageRepository.findByWorkspace(workspace);
+		List<ImageMetadata> images = this.imageRepository.findByWorkspaceId(workspace.getId());
 		return images;
 	}
 
 	@Override
 	public ImageMetadata find(Workspace workspace, String filename) {
-		ImageMetadata imageMetadata = this.imageRepository.findByWorkspaceAndFilename(workspace, filename);
+		ImageMetadata imageMetadata = this.imageRepository.findByWorkspaceIdAndFilename(workspace.getId(), filename);
 		return imageMetadata;
 	}
 
 	@Override
 	public List<ImageMetadata> find(final Workspace workspace, final ImageLabel label) {
-		List<ImageMetadata> images = this.imageRepository.findByWorkspaceAndLabel(workspace, label);
+		List<ImageMetadata> images = this.imageRepository.findByWorkspaceIdAndLabel(workspace.getId(), label);
 		return images;
 	}
 

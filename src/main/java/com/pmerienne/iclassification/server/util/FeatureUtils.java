@@ -8,7 +8,7 @@ import org.openimaj.image.feature.local.keypoints.Keypoint;
 
 import com.pmerienne.iclassification.shared.model.Feature;
 
-public class SiftFeatureUtils {
+public class FeatureUtils {
 
 	public static List<Feature> keypointsToFeatures(LocalFeatureList<Keypoint> keypoints) {
 		// Convert to byte table

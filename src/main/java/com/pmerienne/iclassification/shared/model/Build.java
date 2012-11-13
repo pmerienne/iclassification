@@ -22,14 +22,11 @@ public class Build {
 	@Id
 	private String id;
 
+	private String workspaceId;
+
 	private State state = State.WAITING;
 
 	private Date date;
-
-	@DBRef
-	@XmlTransient
-	@JsonIgnore
-	private List<ImageLabel> imageLabels = new ArrayList<ImageLabel>();
 
 	private List<FeatureConfiguration> featureConfigurations = new ArrayList<FeatureConfiguration>();
 
@@ -41,12 +38,16 @@ public class Build {
 	private ClassificationEvaluation classificationEvaluation;
 
 	public Build() {
+		super();
+	}
+
+	public Build(Workspace workspace) {
+		this.workspaceId = workspace.getId();
 		this.date = new Date();
 	}
 
-	public Build(List<ImageLabel> imageLabels, List<FeatureConfiguration> featureConfigurations) {
-		this();
-		this.imageLabels = imageLabels;
+	public Build(Workspace workspace, List<FeatureConfiguration> featureConfigurations) {
+		this(workspace);
 		this.featureConfigurations = featureConfigurations;
 	}
 
@@ -56,6 +57,14 @@ public class Build {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getWorkspaceId() {
+		return workspaceId;
+	}
+
+	public void setWorkspaceId(String workspaceId) {
+		this.workspaceId = workspaceId;
 	}
 
 	public State getState() {
@@ -80,14 +89,6 @@ public class Build {
 
 	public void setFeatureConfigurations(List<FeatureConfiguration> featureConfigurations) {
 		this.featureConfigurations = featureConfigurations;
-	}
-
-	public List<ImageLabel> getImageLabels() {
-		return imageLabels;
-	}
-
-	public void setImageLabels(List<ImageLabel> imageLabels) {
-		this.imageLabels = imageLabels;
 	}
 
 	public List<Dictionary> getDictionaries() {

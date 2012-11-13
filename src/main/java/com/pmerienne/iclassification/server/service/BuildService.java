@@ -9,10 +9,12 @@ import com.pmerienne.iclassification.shared.model.Workspace;
 public interface BuildService {
 
 	List<Build> findAll();
-	
+
+	List<Build> findByWorkspace(Workspace workspace);
+
 	Build findById(String id);
 
 	void delete(Build build);
-	
+
 	Build createBuild(Workspace workspace, List<FeatureConfiguration> featureConfigurations);
 }

@@ -16,9 +16,9 @@ import com.pmerienne.iclassification.server.core.ClassificationException;
 import com.pmerienne.iclassification.server.core.Dataset;
 import com.pmerienne.iclassification.server.repository.BuildRepository;
 import com.pmerienne.iclassification.shared.model.Build;
+import com.pmerienne.iclassification.shared.model.Dictionary;
 import com.pmerienne.iclassification.shared.model.Build.State;
 import com.pmerienne.iclassification.shared.model.ClassificationEvaluation;
-import com.pmerienne.iclassification.shared.model.Dictionary;
 
 public class BuildServiceImplTest {
 

@@ -63,6 +63,7 @@ public class FileRepositoryImpl implements FileRepository, InitializingBean {
 	public List<String> findAll() {
 		List<String> filenames = new ArrayList<String>();
 
+		@SuppressWarnings("unchecked")
 		Collection<File> files = FileUtils.listFiles(FILE_DIRECTORY, new String[] { "jpg", "png" }, false);
 		for (File file : files) {
 			String filename = FilenameUtils.getName(file.getAbsolutePath());
