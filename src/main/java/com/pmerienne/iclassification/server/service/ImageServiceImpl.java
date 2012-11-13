@@ -65,7 +65,6 @@ public class ImageServiceImpl implements ImageService {
 
 		return imageFile;
 	}
-
 	@Override
 	public List<ImageMetadata> importFromZip(Workspace workspace, InputStream zipInputStream) {
 		LOGGER.info("Importing images from zip into " + workspace.getName());
@@ -82,6 +81,11 @@ public class ImageServiceImpl implements ImageService {
 				// Get label
 				String parentName = file.getParentFile().getName();
 				ImageLabel label = this.imageLabelService.findByName(parentName);
+				if(label == null) {
+					label = new ImageLabel(parentName, parentName);
+					this.imageLabelService.save(label);
+				}
+				
 				toImports.put(file, label);
 			} catch (Exception ex) {
 				LOGGER.warn("Cannot import file " + file.getName(), ex);
@@ -138,7 +142,7 @@ public class ImageServiceImpl implements ImageService {
 
 	@Override
 	public void delete(Workspace workspace, String filename) {
-		ImageMetadata imageMetadata = this.imageRepository.findByWorkspaceAndFilename(workspace, filename);
+		ImageMetadata imageMetadata = this.imageRepository.findByWorkspaceIdAndFilename(workspace.getId(), filename);
 		this.imageRepository.delete(imageMetadata);
 	}
 
@@ -149,19 +153,19 @@ public class ImageServiceImpl implements ImageService {
 
 	@Override
 	public List<ImageMetadata> find(Workspace workspace) {
-		List<ImageMetadata> images = this.imageRepository.findByWorkspace(workspace);
+		List<ImageMetadata> images = this.imageRepository.findByWorkspaceId(workspace.getId());
 		return images;
 	}
 
 	@Override
 	public ImageMetadata find(Workspace workspace, String filename) {
-		ImageMetadata imageMetadata = this.imageRepository.findByWorkspaceAndFilename(workspace, filename);
+		ImageMetadata imageMetadata = this.imageRepository.findByWorkspaceIdAndFilename(workspace.getId(), filename);
 		return imageMetadata;
 	}
 
 	@Override
 	public List<ImageMetadata> find(final Workspace workspace, final ImageLabel label) {
-		List<ImageMetadata> images = this.imageRepository.findByWorkspaceAndLabel(workspace, label);
+		List<ImageMetadata> images = this.imageRepository.findByWorkspaceIdAndLabel(workspace.getId(), label);
 		return images;
 	}
 

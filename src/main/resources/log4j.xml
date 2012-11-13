@@ -11,7 +11,7 @@
 
 	<appender name="ROLL" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="datePattern" value="'.'yyyy-MM-dd" />
-		<param name="File" value="${catalina.base}/logs/iclassification.logs" />
+		<param name="File" value="logs/iclassification.logs" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%-5p %d{DATE} [%c{1}] : %m%n" />
 		</layout>

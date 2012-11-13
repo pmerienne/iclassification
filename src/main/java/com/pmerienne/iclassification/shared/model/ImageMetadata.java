@@ -20,8 +20,7 @@ public class ImageMetadata implements Serializable {
 	@Id
 	private String filename;
 
-	@DBRef
-	private Workspace workspace;
+	private String workspaceId;
 
 	@DBRef
 	private ImageLabel label;
@@ -33,37 +32,31 @@ public class ImageMetadata implements Serializable {
 	}
 
 	public ImageMetadata(String filename) {
-		super();
+		this();
 		this.filename = filename;
 	}
 
 	public ImageMetadata(String filename, ImageLabel label) {
-		super();
-		this.filename = filename;
+		this(filename);
 		this.label = label;
 	}
 
 	public ImageMetadata(String filename, Workspace workspace, ImageLabel label) {
-		super();
-		this.filename = filename;
-		this.workspace = workspace;
-		this.label = label;
+		this(filename, label);
+		this.workspaceId = workspace.getId();
 	}
 
 	public ImageMetadata(String filename, Workspace workspace, ImageLabel label, CropZone cropZone) {
-		super();
-		this.filename = filename;
-		this.workspace = workspace;
-		this.label = label;
+		this(filename, workspace, label);
 		this.cropZone = cropZone;
 	}
 
-	public Workspace getWorkspace() {
-		return workspace;
+	public String getWorkspaceId() {
+		return workspaceId;
 	}
 
-	public void setWorkspace(Workspace workspace) {
-		this.workspace = workspace;
+	public void setWorkspaceId(String workspaceId) {
+		this.workspaceId = workspaceId;
 	}
 
 	public String getFilename() {
@@ -123,7 +116,7 @@ public class ImageMetadata implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ImageMetadata [filename=" + filename + ", label=" + label + ", workspace=" + workspace + ", cropZone=" + cropZone + "]";
+		return "ImageMetadata [filename=" + filename + ", workspaceId=" + workspaceId + ", label=" + label + ", cropZone=" + cropZone + "]";
 	}
 
 }

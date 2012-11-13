@@ -4,18 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+
 @Document
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Dictionary implements Serializable {
 
 	private static final long serialVersionUID = -3135249299961575125L;
@@ -25,12 +19,11 @@ public class Dictionary implements Serializable {
 	@Id
 	private String id;
 
+	@DBRef
 	private ImageLabel imageLabel;
 
 	private FeatureConfiguration featureConfiguration;
 
-	@XmlTransient
-	@JsonIgnore
 	private List<Feature> centroids = new ArrayList<Feature>();
 
 	public Dictionary() {

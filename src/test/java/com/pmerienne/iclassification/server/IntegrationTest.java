@@ -29,7 +29,7 @@ public abstract class IntegrationTest {
 
 	private List<String> SYSTEM_COLLECTIONS = Arrays.asList("fs.chunks", "fs.files", "system.indexes", "system.users");
 
-	private final static File ZIP_FILE = new File("src/test/resources/data/dataset-min.zip");
+	private final static File ZIP_FILE = new File("src/test/resources/data/dataset-flowers.min.zip");
 
 	@Autowired
 	private ImageService imageService;
@@ -45,9 +45,9 @@ public abstract class IntegrationTest {
 
 	protected Workspace testWorkspace;
 
-	protected ImageLabel egret;
-	protected ImageLabel owl;
-	protected ImageLabel mandarin;
+	protected ImageLabel bluebell;
+	protected ImageLabel crocus;
+	protected ImageLabel snowdrop;
 
 	@Before
 	public void setup() {
@@ -56,10 +56,10 @@ public abstract class IntegrationTest {
 		this.testWorkspace = new Workspace("Test workspace");
 		this.workspaceRepository.save(testWorkspace);
 
-		this.egret = new ImageLabel("egret", "egret");
-		this.owl = new ImageLabel("owl", "owl");
-		this.mandarin = new ImageLabel("mandarin", "mandarin");
-		this.imageLabelRepository.save(Arrays.asList(egret, owl, mandarin));
+		this.bluebell = new ImageLabel("bluebell", "bluebell");
+		this.crocus = new ImageLabel("crocus", "crocus");
+		this.snowdrop = new ImageLabel("snowdrop", "snowdrop");
+		this.imageLabelRepository.save(Arrays.asList(bluebell, crocus, snowdrop));
 	}
 
 	@After

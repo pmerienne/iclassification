@@ -10,9 +10,9 @@ import com.pmerienne.iclassification.shared.model.Workspace;
 
 public interface ImageRepository extends MongoRepository<ImageMetadata, String> {
 
-	ImageMetadata findByWorkspaceAndFilename(Workspace workspace, String filename);
+	ImageMetadata findByWorkspaceIdAndFilename(String workspaceId, String filename);
 	
-	List<ImageMetadata> findByWorkspace(Workspace workspace);
+	List<ImageMetadata> findByWorkspaceId(String workspaceId);
 
-	List<ImageMetadata> findByWorkspaceAndLabel(Workspace workspace, ImageLabel label);
+	List<ImageMetadata> findByWorkspaceIdAndLabel(String workspaceId, ImageLabel label);
 }

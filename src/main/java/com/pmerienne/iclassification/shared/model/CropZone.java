@@ -58,6 +58,10 @@ public class CropZone {
 		return this.x < x && x < this.x + this.width && this.y < y && y < this.y + this.height;
 	}
 
+	public static CropZone getDefault(int imageWidth, int imageHeight) {
+		return new CropZone(imageWidth / 4, imageHeight / 4, imageWidth / 2, imageHeight / 2);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

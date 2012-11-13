@@ -23,7 +23,7 @@ public class DatasetServiceImpl implements DatasetService {
 
 	@Override
 	public Dataset createDataset(Workspace workspace, int percent) {
-		List<ImageMetadata> allFiles = this.imageRepository.findByWorkspace(workspace);
+		List<ImageMetadata> allFiles = this.imageRepository.findByWorkspaceId(workspace.getId());
 		Collections.shuffle(allFiles);
 
 		List<ImageMetadata> trainingImages = new ArrayList<ImageMetadata>();

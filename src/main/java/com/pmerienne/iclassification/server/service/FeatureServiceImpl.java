@@ -45,9 +45,7 @@ public class FeatureServiceImpl implements FeatureService {
 			// Load image from database
 			imageMetadata = this.imageRepository.findOne(imageMetadata.getFilename());
 			File file = this.fileRepository.get(imageMetadata.getFilename());
-
-			features = this.featureRepository.findByImageMetadataAndTypeAndUseCropZone(imageMetadata, fc.getType(),
-					fc.isUseCropZone());
+			features = this.featureRepository.findByFilenameAndTypeAndUseCropZone(imageMetadata.getFilename(), fc.getType(), fc.isUseCropZone());
 
 			// If the features doesn't exists, we compute it!
 			if (features == null || features.isEmpty()) {
@@ -62,7 +60,7 @@ public class FeatureServiceImpl implements FeatureService {
 
 				// Save image features
 				for (Feature feature : features) {
-					feature.setImageMetadata(imageMetadata);
+					feature.setFilename(imageMetadata.getFilename());
 					feature.setType(fc.getType());
 					feature.setUseCropZone(fc.isUseCropZone());
 				}
@@ -94,7 +92,8 @@ public class FeatureServiceImpl implements FeatureService {
 
 	@Override
 	public void clearFeatures(ImageMetadata imageMetadata) {
-		List<Feature> features = this.featureRepository.findByImageMetadata(imageMetadata);
+		String filename = imageMetadata.getFilename();
+		List<Feature> features = this.featureRepository.findByFilename(filename);
 		if (features != null && !features.isEmpty()) {
 			this.featureRepository.delete(features);
 		}

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.pmerienne.iclassification.server.repository.DictionaryRepository;
-import com.pmerienne.iclassification.server.util.SiftFeatureUtils;
+import com.pmerienne.iclassification.server.util.FeatureUtils;
 import com.pmerienne.iclassification.shared.model.Dictionary;
 import com.pmerienne.iclassification.shared.model.Feature;
 import com.pmerienne.iclassification.shared.model.FeatureConfiguration;
@@ -57,7 +57,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 		ByteCentroidsResult byteCentroidsResult = cluster.cluster(vocabulary);
 
 		// Create and save dictionary
-		List<Feature> centroids = SiftFeatureUtils.toFeatureList(byteCentroidsResult.getCentroids());
+		List<Feature> centroids = FeatureUtils.toFeatureList(byteCentroidsResult.getCentroids());
 		Dictionary dictionary = new Dictionary(imageLabel, featureConfiguration, centroids);
 		this.dictionaryRepository.save(dictionary);
 
@@ -93,7 +93,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
 		// Get image features
 		List<Feature> imageFeatures = this.featureService.getFeatures(imageMetadata, featureConfiguration);
-		byte[][] features = SiftFeatureUtils.toByteArray(imageFeatures);
+		byte[][] features = FeatureUtils.toByteArray(imageFeatures);
 
 		// Load all cluster centroids
 		List<Feature> allCentroids = new ArrayList<Feature>();
@@ -104,7 +104,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 				allCentroids.add(centroid);
 			}
 		}
-		byte[][] centroids = SiftFeatureUtils.toByteArray(allCentroids);
+		byte[][] centroids = FeatureUtils.toByteArray(allCentroids);
 
 		// Assign features to centroids
 		ByteCentroidsResult byteCentroidsResult = new ByteCentroidsResult();
@@ -139,7 +139,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 		}
 
 		// Convert to byte 2d array
-		vocabulary = SiftFeatureUtils.toByteArray(allFeatures);
+		vocabulary = FeatureUtils.toByteArray(allFeatures);
 		return vocabulary;
 	}
 

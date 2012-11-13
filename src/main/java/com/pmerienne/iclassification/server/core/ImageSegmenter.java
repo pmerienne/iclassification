@@ -36,6 +36,10 @@ public class ImageSegmenter {
 	public File segment(File inputFile, CropZone cropZone) throws IOException {
 		BufferedImage input = ImageIO.read(inputFile);
 
+		if (cropZone == null) {
+			cropZone = CropZone.getDefault(input.getWidth(), input.getHeight());
+		}
+
 		// Get an image mask using grap cut
 		BufferedImage mask = this.getGrabCutMask(inputFile, cropZone);
 
@@ -59,8 +63,7 @@ public class ImageSegmenter {
 			// Check crop zone
 			if (cropZone == null) {
 				Dimension imageSize = ImageUtils.getImageSize(inputFile);
-				cropZone = new CropZone((int) imageSize.getWidth() / 4, (int) imageSize.getWidth() / 4,
-						(int) imageSize.getWidth() / 2, (int) imageSize.getHeight() / 2);
+				cropZone = CropZone.getDefault((int) imageSize.getWidth(), (int) imageSize.getHeight());
 			}
 
 			// Load input image
@@ -114,9 +117,13 @@ public class ImageSegmenter {
 		double sizeFactorToKeep = 4.0;
 
 		SioxSegmentator sioxSegmentator = new SioxSegmentator(width, height, limits);
-		boolean success = sioxSegmentator.segmentate(argbImage, cm, smoothness, sizeFactorToKeep);
-		if (!success) {
-			throw new IOException("Siox segment failed");
+		try {
+			boolean success = sioxSegmentator.segmentate(argbImage, cm, smoothness, sizeFactorToKeep);
+			if (!success) {
+				return input;
+			}
+		} catch(IllegalStateException ise) {
+			return input;
 		}
 
 		for (int k = 0; k < argbImage.length; k++) {
