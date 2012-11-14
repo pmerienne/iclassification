@@ -10,7 +10,7 @@
 	<properties>
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
 		<os.name>linux</os.name>
-		<os.arch>x86</os.arch>
+		<os.arch>x86_64</os.arch>
 		<platform.name>${os.name}-${os.arch}</platform.name>
 
 		<!-- Compiler properties -->
