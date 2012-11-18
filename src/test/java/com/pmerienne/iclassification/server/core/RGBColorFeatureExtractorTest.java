@@ -11,11 +11,11 @@ import org.junit.Test;
 
 import com.pmerienne.iclassification.shared.model.Feature;
 
-public class SiftFeatureExtractorTest {
+public class RGBColorFeatureExtractorTest {
 
-	private final static File FILE = new File("src/test/resources/data/flower.jpg");
+	private final static File FILE = new File("src/test/resources/data/egret.jpg");
 
-	private SiftFeatureExtractor extractor = new SiftFeatureExtractor();
+	private RGBColorFeatureExtractor extractor = new RGBColorFeatureExtractor();
 
 	@Test
 	public void testGetFeatures() {

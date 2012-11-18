@@ -9,4 +9,6 @@ import com.pmerienne.iclassification.shared.model.Feature;
 public interface FeatureExtractor {
 
 	List<Feature> getFeatures(File file);
+	
+	File createFeatureImage(File file);
 }
