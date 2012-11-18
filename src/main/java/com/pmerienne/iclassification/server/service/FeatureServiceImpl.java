@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pmerienne.iclassification.server.core.FeatureExtractor;
+import com.pmerienne.iclassification.server.core.HSVColorFeatureExtractor;
 import com.pmerienne.iclassification.server.core.RGBColorFeatureExtractor;
 import com.pmerienne.iclassification.server.core.SiftFeatureExtractor;
 import com.pmerienne.iclassification.server.core.SurfFeatureExtractor;
@@ -41,6 +42,9 @@ public class FeatureServiceImpl implements FeatureService {
 
 	@Autowired
 	private RGBColorFeatureExtractor rgbColorFeatureExtractor;
+
+	@Autowired
+	private HSVColorFeatureExtractor hsvColorFeatureExtractor;
 
 	@Autowired
 	private ImageService imageService;
@@ -98,7 +102,9 @@ public class FeatureServiceImpl implements FeatureService {
 		case RGB_COLOR:
 			extractor = this.rgbColorFeatureExtractor;
 			break;
-
+		case HSV_COLOR:
+			extractor = this.hsvColorFeatureExtractor;
+			break;
 		}
 
 		// Extract and retur features

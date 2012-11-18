@@ -12,10 +12,13 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.springframework.stereotype.Component;
+
 import com.pmerienne.iclassification.shared.model.Feature;
 
 import de.lmu.ifi.dbs.jfeaturelib.features.SURF;
 
+@Component
 public class SurfFeatureExtractor extends AbstractJFeatureExtractor implements FeatureExtractor {
 
 	@Override

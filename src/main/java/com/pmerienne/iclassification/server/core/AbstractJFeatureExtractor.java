@@ -17,7 +17,7 @@ public class AbstractJFeatureExtractor {
 
 	private final static Logger LOGGER = Logger.getLogger(AbstractJFeatureExtractor.class);
 
-	private static LibProperties LIB_PROPERTIES;
+	protected static LibProperties LIB_PROPERTIES;
 	static {
 		try {
 			LIB_PROPERTIES = LibProperties.get();
