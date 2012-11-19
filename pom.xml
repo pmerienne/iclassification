@@ -11,7 +11,6 @@
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
 		<os.name>linux</os.name>
 		<os.arch>x86_64</os.arch>
-		<platform.name>${os.name}-${os.arch}</platform.name>
 
 		<!-- Compiler properties -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -337,13 +336,13 @@
 			<artifactId>asm</artifactId>
 			<version>3.1</version>
 		</dependency>
-		<dependency>
-			<groupId>org.openimaj</groupId>
-			<artifactId>clustering</artifactId>
-			<version>${openimaj.version}</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.openimaj</groupId> -->
+<!-- 			<artifactId>clustering</artifactId> -->
+<!-- 			<version>${openimaj.version}</version> -->
+<!-- 		</dependency> -->
 
-		<!-- Weka for svm classification -->
+		<!-- Weka for svm classification and dictionary clusterization -->
 		<dependency>
 			<groupId>nz.ac.waikato.cms.weka</groupId>
 			<artifactId>weka-stable</artifactId>
@@ -365,7 +364,7 @@
 			<groupId>com.googlecode.javacv</groupId>
 			<artifactId>javacv</artifactId>
 			<version>${javacv.version}</version>
-			<classifier>${platform.name}</classifier>
+			<classifier>${os.name}-${os.arch}</classifier>
 		</dependency>
 		<!-- <dependency> -->
 		<!-- <groupId>org.javacv</groupId> -->

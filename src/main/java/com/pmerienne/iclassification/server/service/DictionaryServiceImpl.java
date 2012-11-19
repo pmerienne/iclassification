@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.openimaj.ml.clustering.ByteCentroidsResult;
-import org.openimaj.ml.clustering.kmeans.fast.FastByteKMeans;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.pmerienne.iclassification.server.core.KMeans;
 import com.pmerienne.iclassification.server.repository.DictionaryRepository;
 import com.pmerienne.iclassification.server.util.FeatureUtils;
 import com.pmerienne.iclassification.shared.model.Dictionary;
@@ -27,8 +26,6 @@ public class DictionaryServiceImpl implements DictionaryService {
 
 	private final static Logger LOGGER = Logger.getLogger(DictionaryServiceImpl.class);
 
-	private final static Integer DEFAULT_KMEANS_ITERATION = 1;
-
 	@Autowired
 	private DictionaryRepository dictionaryRepository;
 
@@ -36,8 +33,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 	private FeatureService featureService;
 
 	@Override
-	public Dictionary createDictionary(FeatureConfiguration featureConfiguration, ImageLabel imageLabel,
-			List<ImageMetadata> imageMetadatas) {
+	public Dictionary createDictionary(FeatureConfiguration featureConfiguration, ImageLabel imageLabel, List<ImageMetadata> imageMetadatas) {
 		// Check image metadata
 		for (ImageMetadata imageMetadata : imageMetadatas) {
 			if (!imageLabel.equals(imageMetadata.getLabel())) {
@@ -47,17 +43,17 @@ public class DictionaryServiceImpl implements DictionaryService {
 
 		// Create vocabulary
 		LOGGER.info("Extracting vocabulary (" + featureConfiguration + ") from " + imageMetadatas.size() + " images.");
-		byte[][] vocabulary = this.createVocabulary(featureConfiguration, imageMetadatas);
+		double[][] vocabulary = this.createVocabulary(featureConfiguration, imageMetadatas);
 
 		// Cluster vocabulary to make dictionary
 		int dictionarySize = featureConfiguration.getDictionarySize();
 		LOGGER.info("Clustering " + vocabulary.length + " features into " + dictionarySize + " words");
 
-		FastByteKMeans cluster = new FastByteKMeans(vocabulary.length, dictionarySize, true, DEFAULT_KMEANS_ITERATION);
-		ByteCentroidsResult byteCentroidsResult = cluster.cluster(vocabulary);
+		KMeans kMeans = new KMeans(vocabulary, dictionarySize);
+		double[][] rawCentroids = kMeans.cluster();
 
 		// Create and save dictionary
-		List<Feature> centroids = FeatureUtils.toFeatureList(byteCentroidsResult.getCentroids());
+		List<Feature> centroids = FeatureUtils.toFeatureList(rawCentroids);
 		Dictionary dictionary = new Dictionary(imageLabel, featureConfiguration, centroids);
 		this.dictionaryRepository.save(dictionary);
 
@@ -68,8 +64,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 	public Map<Dictionary, Double> getDictionaryResponses(List<Dictionary> dictionaries, ImageMetadata imageMetadata) {
 		Map<Dictionary, Double> dictionaryResponses = new HashMap<Dictionary, Double>();
 
-		Multimap<FeatureConfiguration, Dictionary> mappedDictionaries = this
-				.mapDictionariesByFeatureConfiguration(dictionaries);
+		Multimap<FeatureConfiguration, Dictionary> mappedDictionaries = this.mapDictionariesByFeatureConfiguration(dictionaries);
 
 		// Fetch dictionary responses for each feature configuration
 		for (FeatureConfiguration fc : mappedDictionaries.keySet()) {
@@ -81,8 +76,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 		return dictionaryResponses;
 	}
 
-	protected Map<Dictionary, Double> getFeatureResponses(Collection<Dictionary> dictionaries,
-			ImageMetadata imageMetadata) {
+	protected Map<Dictionary, Double> getFeatureResponses(Collection<Dictionary> dictionaries, ImageMetadata imageMetadata) {
 		FeatureConfiguration featureConfiguration = dictionaries.iterator().next().getFeatureConfiguration();
 
 		// Init response
@@ -93,7 +87,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
 		// Get image features
 		List<Feature> imageFeatures = this.featureService.getFeatures(imageMetadata, featureConfiguration);
-		byte[][] features = FeatureUtils.toByteArray(imageFeatures);
+		double[][] features = FeatureUtils.toArray(imageFeatures);
 
 		// Load all cluster centroids
 		List<Feature> allCentroids = new ArrayList<Feature>();
@@ -104,12 +98,11 @@ public class DictionaryServiceImpl implements DictionaryService {
 				allCentroids.add(centroid);
 			}
 		}
-		byte[][] centroids = FeatureUtils.toByteArray(allCentroids);
+		double[][] centroids = FeatureUtils.toArray(allCentroids);
 
 		// Assign features to centroids
-		ByteCentroidsResult byteCentroidsResult = new ByteCentroidsResult();
-		byteCentroidsResult.centroids = centroids;
-		int[] assignedClusterIndexes = byteCentroidsResult.defaultHardAssigner().assign(features);
+		KMeans kMeans = new KMeans(centroids);
+		int[] assignedClusterIndexes = kMeans.assign(features);
 
 		// Count number of assigned feature by dictionary
 		for (int assignedClusterIndex : assignedClusterIndexes) {
@@ -125,8 +118,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 		return bowHistogram;
 	}
 
-	protected byte[][] createVocabulary(FeatureConfiguration featureConfiguration, List<ImageMetadata> imageMetadatas) {
-		byte[][] vocabulary = null;
+	protected double[][] createVocabulary(FeatureConfiguration featureConfiguration, List<ImageMetadata> imageMetadatas) {
+		double[][] vocabulary = null;
 		List<Feature> allFeatures = new ArrayList<Feature>();
 		List<Feature> imageFeatures = null;
 
@@ -139,12 +132,11 @@ public class DictionaryServiceImpl implements DictionaryService {
 		}
 
 		// Convert to byte 2d array
-		vocabulary = FeatureUtils.toByteArray(allFeatures);
+		vocabulary = FeatureUtils.toArray(allFeatures);
 		return vocabulary;
 	}
 
-	protected Multimap<FeatureConfiguration, Dictionary> mapDictionariesByFeatureConfiguration(
-			List<Dictionary> dictionaries) {
+	protected Multimap<FeatureConfiguration, Dictionary> mapDictionariesByFeatureConfiguration(List<Dictionary> dictionaries) {
 		Multimap<FeatureConfiguration, Dictionary> mappedDictionaries = ArrayListMultimap.create();
 		for (Dictionary dictionary : dictionaries) {
 			mappedDictionaries.put(dictionary.getFeatureConfiguration(), dictionary);
