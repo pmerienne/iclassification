@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pmerienne.iclassification.server.core.FeatureExtractor;
+import com.pmerienne.iclassification.server.core.HSVColorFeatureExtractor;
+import com.pmerienne.iclassification.server.core.RGBColorFeatureExtractor;
 import com.pmerienne.iclassification.server.core.SiftFeatureExtractor;
+import com.pmerienne.iclassification.server.core.SurfFeatureExtractor;
 import com.pmerienne.iclassification.server.repository.FeatureRepository;
 import com.pmerienne.iclassification.server.repository.FileRepository;
 import com.pmerienne.iclassification.server.repository.ImageRepository;
@@ -35,6 +38,15 @@ public class FeatureServiceImpl implements FeatureService {
 	private SiftFeatureExtractor siftFeatureExtractor;
 
 	@Autowired
+	private SurfFeatureExtractor sufFeatureExtractor;
+
+	@Autowired
+	private RGBColorFeatureExtractor rgbColorFeatureExtractor;
+
+	@Autowired
+	private HSVColorFeatureExtractor hsvColorFeatureExtractor;
+
+	@Autowired
 	private ImageService imageService;
 
 	@Override
@@ -45,7 +57,8 @@ public class FeatureServiceImpl implements FeatureService {
 			// Load image from database
 			imageMetadata = this.imageRepository.findOne(imageMetadata.getFilename());
 			File file = this.fileRepository.get(imageMetadata.getFilename());
-			features = this.featureRepository.findByFilenameAndTypeAndUseCropZone(imageMetadata.getFilename(), fc.getType(), fc.isUseCropZone());
+			features = this.featureRepository.findByFilenameAndTypeAndUseCropZone(imageMetadata.getFilename(),
+					fc.getType(), fc.isUseCropZone());
 
 			// If the features doesn't exists, we compute it!
 			if (features == null || features.isEmpty()) {
@@ -82,6 +95,15 @@ public class FeatureServiceImpl implements FeatureService {
 		switch (featureConfiguration.getType()) {
 		case SIFT:
 			extractor = this.siftFeatureExtractor;
+			break;
+		case SURF:
+			extractor = this.sufFeatureExtractor;
+			break;
+		case RGB_COLOR:
+			extractor = this.rgbColorFeatureExtractor;
+			break;
+		case HSV_COLOR:
+			extractor = this.hsvColorFeatureExtractor;
 			break;
 		}
 

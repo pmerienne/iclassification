@@ -11,11 +11,11 @@ import org.junit.Test;
 
 import com.pmerienne.iclassification.shared.model.Feature;
 
-public class SiftFeatureExtractorTest {
+public class HSVColorFeatureExtractorTest {
 
 	private final static File FILE = new File("src/test/resources/data/flower.jpg");
 
-	private SiftFeatureExtractor extractor = new SiftFeatureExtractor();
+	private HSVColorFeatureExtractor extractor = new HSVColorFeatureExtractor();
 
 	@Test
 	public void testGetFeatures() {
