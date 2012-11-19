@@ -23,6 +23,5 @@
 		</g:ScrollPanel>
 
 		<w:ImportFromZipModal ui:field="imporFromZipModal" />
-		<w:ImageDetailModal ui:field="imageDetailModal" />
 	</g:HTMLPanel>
 </ui:UiBinder> 

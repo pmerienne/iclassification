@@ -4,6 +4,7 @@ import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.place.shared.Place;
 import com.pmerienne.iclassification.client.factory.ClientFactory;
+import com.pmerienne.iclassification.client.place.ImageDetailPlace;
 import com.pmerienne.iclassification.client.place.ImageLabelsPlace;
 import com.pmerienne.iclassification.client.place.ImagesPlace;
 import com.pmerienne.iclassification.client.place.LoginPlace;
@@ -35,6 +36,11 @@ public class ApplicationActivityMapper implements ActivityMapper {
 
 		} else if (place instanceof ImageLabelsPlace) {
 			activity = new ImageLabelsActivity(this.clientFactory);
+
+		} else if (place instanceof ImageDetailPlace) {
+			ImageDetailPlace idp = (ImageDetailPlace) place;
+			activity = new ImageDetailActivity(this.clientFactory, idp.getWorkspaceId(), idp.getImageId());
+
 		}
 
 		return activity;

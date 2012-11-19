@@ -3,6 +3,8 @@ package com.pmerienne.iclassification.client.factory;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
+import com.pmerienne.iclassification.client.view.ImageDetailView;
+import com.pmerienne.iclassification.client.view.ImageDetailViewImpl;
 import com.pmerienne.iclassification.client.view.ImageLabelsView;
 import com.pmerienne.iclassification.client.view.ImageLabelsViewImpl;
 import com.pmerienne.iclassification.client.view.ImagesView;
@@ -21,6 +23,7 @@ public class ClientFactoryImpl implements ClientFactory {
 	private final WorkspaceConfigurationView workspaceConfigurationView = new WorkspaceConfigurationViewImpl();
 	private final ImagesView imagesView = new ImagesViewImpl();
 	private final ImageLabelsView imageLabelsView = new ImageLabelsViewImpl();
+	private final ImageDetailView imageDetailView = new ImageDetailViewImpl();
 
 	@Override
 	public EventBus getEventBus() {
@@ -50,5 +53,10 @@ public class ClientFactoryImpl implements ClientFactory {
 	@Override
 	public ImageLabelsView getImageLabelsView() {
 		return this.imageLabelsView;
+	}
+
+	@Override
+	public ImageDetailView getImageDetailView() {
+		return this.imageDetailView;
 	}
 }

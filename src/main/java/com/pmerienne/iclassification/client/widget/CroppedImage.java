@@ -19,19 +19,31 @@ public class CroppedImage extends Image {
 	protected void onAttach() {
 		super.onAttach();
 		Element element = this.getElement();
-		this.initCroppping(element);
+		this._initCroppping(element);
 	}
 
 	@Override
 	protected void onDetach() {
 		Element element = this.getElement();
 		if (element != null) {
-			this.releaseCroppping(element);
+			this._releaseCroppping(element);
 		}
 		super.onDetach();
 	}
 
-	private native void initCroppping(Element element) /*-{
+	// public void initCropping() {
+	// Element element = this.getElement();
+	// this._initCroppping(element);
+	// }
+	//
+	// public void releaseCropping() {
+	// Element element = this.getElement();
+	// if (element != null) {
+	// this._releaseCroppping(element);
+	// }
+	// }
+
+	private native void _initCroppping(Element element) /*-{
 		var instance = this;
 
 		var update = function(c) {
@@ -56,7 +68,7 @@ public class CroppedImage extends Image {
 		$wnd.$(element).Jcrop(options, onReady);
 	}-*/;
 
-	private native void releaseCroppping(Element element) /*-{
+	private native void _releaseCroppping(Element element) /*-{
 		var api = this.@com.pmerienne.iclassification.client.widget.CroppedImage::jcropApi;
 		if (api) {
 			api.destroy();

@@ -20,11 +20,10 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.pmerienne.iclassification.client.widget.ImageDetailModal;
+import com.pmerienne.iclassification.client.place.ImageDetailPlace;
 import com.pmerienne.iclassification.client.widget.ImageLabelListBox;
 import com.pmerienne.iclassification.client.widget.ImageThumbnail;
 import com.pmerienne.iclassification.client.widget.ImportFromZipModal;
-import com.pmerienne.iclassification.shared.model.CropZone;
 import com.pmerienne.iclassification.shared.model.ImageLabel;
 import com.pmerienne.iclassification.shared.model.ImageMetadata;
 import com.pmerienne.iclassification.shared.model.Workspace;
@@ -53,9 +52,6 @@ public class ImagesViewImpl extends Composite implements ImagesView {
 	@UiField
 	ImportFromZipModal imporFromZipModal;
 
-	@UiField
-	ImageDetailModal imageDetailModal;
-
 	private Workspace workspace;
 
 	private Presenter presenter;
@@ -76,27 +72,6 @@ public class ImagesViewImpl extends Composite implements ImagesView {
 				if (ImagesViewImpl.this.scrollPanel.getVerticalScrollPosition() == ImagesViewImpl.this.scrollPanel.getMaximumVerticalScrollPosition()) {
 					ImagesViewImpl.this.showMoreImages();
 				}
-			}
-		});
-
-		this.imageDetailModal.addApplyHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				ImageMetadata image = ImagesViewImpl.this.imageDetailModal.getImageMetadata();
-				CropZone cropZone = ImagesViewImpl.this.imageDetailModal.getSelectedCropZone();
-
-				ImagesViewImpl.this.presenter.setCropZone(workspace, image, cropZone);
-			}
-		});
-
-		this.imageDetailModal.addSaveHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				ImageMetadata image = ImagesViewImpl.this.imageDetailModal.getImageMetadata();
-				CropZone cropZone = ImagesViewImpl.this.imageDetailModal.getSelectedCropZone();
-				ImagesViewImpl.this.presenter.setCropZone(workspace, image, cropZone);
-
-				ImagesViewImpl.this.imageDetailModal.hide();
 			}
 		});
 	}
@@ -175,29 +150,14 @@ public class ImagesViewImpl extends Composite implements ImagesView {
 		thumbnail.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ImagesViewImpl.this.imageDetailModal.setImageMetadata(thumbnail.getImageMetadata());
-				ImagesViewImpl.this.imageDetailModal.show();
-			}
-		});
-
-		thumbnail.addRemoveHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				ImagesViewImpl.this.remove(imageMetadata);
+				String workspaceId = ImagesViewImpl.this.workspace.getId();
+				String imageId = imageMetadata.getFilename();
+				ImagesViewImpl.this.presenter.goTo(new ImageDetailPlace(workspaceId, imageId));
 			}
 		});
 
 		this.visibleImages.put(imageMetadata, thumbnail);
 		this.imageContainer.add(thumbnail);
-	}
-
-	private void remove(ImageMetadata imageMetadata) {
-		this.presenter.remove(this.workspace, imageMetadata);
-
-		ImageThumbnail thumbnail = this.visibleImages.remove(imageMetadata);
-		if (thumbnail != null) {
-			this.imageContainer.remove(thumbnail);
-		}
 	}
 
 	@Override

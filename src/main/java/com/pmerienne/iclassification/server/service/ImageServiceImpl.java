@@ -57,14 +57,14 @@ public class ImageServiceImpl implements ImageService {
 	public ImageMetadata create(Workspace workspace, File file, ImageLabel label) {
 		String filename = this.fileRepository.save(file);
 		Dimension imageSize = ImageUtils.getImageSize(file);
-		CropZone cropZone = new CropZone((int) imageSize.getWidth() / 4, (int) imageSize.getWidth() / 4,
-				(int) imageSize.getWidth() / 2, (int) imageSize.getHeight() / 2);
+		CropZone cropZone = new CropZone((int) imageSize.getWidth() / 4, (int) imageSize.getWidth() / 4, (int) imageSize.getWidth() / 2, (int) imageSize.getHeight() / 2);
 
 		ImageMetadata imageFile = new ImageMetadata(filename, workspace, label, cropZone);
 		this.imageRepository.save(imageFile);
 
 		return imageFile;
 	}
+
 	@Override
 	public List<ImageMetadata> importFromZip(Workspace workspace, InputStream zipInputStream) {
 		LOGGER.info("Importing images from zip into " + workspace.getName());
@@ -81,11 +81,11 @@ public class ImageServiceImpl implements ImageService {
 				// Get label
 				String parentName = file.getParentFile().getName();
 				ImageLabel label = this.imageLabelService.findByName(parentName);
-				if(label == null) {
+				if (label == null) {
 					label = new ImageLabel(parentName, parentName);
 					this.imageLabelService.save(label);
 				}
-				
+
 				toImports.put(file, label);
 			} catch (Exception ex) {
 				LOGGER.warn("Cannot import file " + file.getName(), ex);
@@ -180,8 +180,7 @@ public class ImageServiceImpl implements ImageService {
 
 		// Check in repo that image was already segmented
 		CropZone cropZone = imageMetadata.getCropZone();
-		SegmentedImage segmentedImage = this.segmentedImageRepository.findByOriginalImageAndCropZone(imageMetadata,
-				cropZone);
+		SegmentedImage segmentedImage = this.segmentedImageRepository.findByOriginalImageAndCropZone(imageMetadata, cropZone);
 
 		if (segmentedImage == null) {
 			File inputFile = this.fileRepository.get(imageMetadata.getFilename());

@@ -21,10 +21,12 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.log4j.Logger;
 
 import com.pmerienne.iclassification.server.service.DatasetService;
+import com.pmerienne.iclassification.server.service.FeatureService;
 import com.pmerienne.iclassification.server.service.ImageLabelService;
 import com.pmerienne.iclassification.server.service.ImageService;
 import com.pmerienne.iclassification.server.service.WorkspaceService;
 import com.pmerienne.iclassification.shared.model.CropZone;
+import com.pmerienne.iclassification.shared.model.FeatureType;
 import com.pmerienne.iclassification.shared.model.ImageLabel;
 import com.pmerienne.iclassification.shared.model.ImageMetadata;
 import com.pmerienne.iclassification.shared.model.Workspace;
@@ -48,6 +50,9 @@ public class ImagesResource {
 
 	@InjectParam
 	private ImageLabelService imageLabelService;
+
+	@InjectParam
+	private FeatureService featureService;
 
 	@GET
 	@Path("{id}")
@@ -102,6 +107,31 @@ public class ImagesResource {
 
 		try {
 			File file = this.imageService.getSegmentedFile(metadata);
+
+			return Response.ok(new FileInputStream(file)).build();
+		} catch (IOException ioe) {
+			return Response.serverError().entity(ioe.getMessage()).build();
+		}
+	}
+
+	@GET
+	@Path("{id}/featureFile")
+	@Produces("image/*")
+	public Response getSegmentedFile(@PathParam("id") String id, @QueryParam("type") String type, @QueryParam("useCropZone") boolean useCropZone) throws FileNotFoundException {
+		ImageMetadata metadata = this.imageService.findById(id);
+		if (metadata == null) {
+			return Response.status(Status.NOT_FOUND).entity("Image " + id + " not found").build();
+		}
+
+		FeatureType featureType = null;
+		try {
+			featureType = FeatureType.valueOf(type);
+		} catch (IllegalArgumentException iae) {
+			return Response.status(Status.NOT_FOUND).entity("Feature type " + type + " not found").build();
+		}
+
+		try {
+			File file = this.featureService.getFeatureFile(metadata, featureType, useCropZone);
 
 			return Response.ok(new FileInputStream(file)).build();
 		} catch (IOException ioe) {

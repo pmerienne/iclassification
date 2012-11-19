@@ -7,12 +7,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@CompoundIndexes({ @CompoundIndex(name = "fw_idx", def = "{'filename' : 1, 'workspaceId' : 1}"), @CompoundIndex(name = "lw_idx", def = "{'label' : 1, 'workspaceId' : 1}") })
 public class ImageMetadata implements Serializable {
 
 	private static final long serialVersionUID = 6528251320569977618L;
@@ -20,6 +24,7 @@ public class ImageMetadata implements Serializable {
 	@Id
 	private String filename;
 
+	@Indexed
 	private String workspaceId;
 
 	@DBRef

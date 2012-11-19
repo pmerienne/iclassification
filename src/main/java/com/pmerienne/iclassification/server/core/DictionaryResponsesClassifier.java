@@ -39,13 +39,18 @@ public class DictionaryResponsesClassifier {
 		for (Dictionary dictionary : dictionaries) {
 			ImageLabel imageLabel = dictionary.getImageLabel();
 			this.imageLabels.add(imageLabel);
+
 			String className = imageLabel.getName();
-			this.classes.add(className);
-			classValues.addElement(className);
+			if (!this.classes.contains(className)) {
+				this.classes.add(className);
+				classValues.addElement(className);
+			}
 
 			String featureName = this.getFeatureName(dictionary);
-			this.features.add(featureName);
-			attributes.addElement(new Attribute(featureName));
+			if (this.features.contains(featureName)) {
+				this.features.add(featureName);
+				attributes.addElement(new Attribute(featureName));
+			}
 		}
 		attributes.addElement(new Attribute("Class", classValues));
 
