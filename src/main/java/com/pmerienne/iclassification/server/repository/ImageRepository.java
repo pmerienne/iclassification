@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.pmerienne.iclassification.shared.model.ImageLabel;
 import com.pmerienne.iclassification.shared.model.ImageMetadata;
-import com.pmerienne.iclassification.shared.model.Workspace;
 
 public interface ImageRepository extends MongoRepository<ImageMetadata, String> {
 

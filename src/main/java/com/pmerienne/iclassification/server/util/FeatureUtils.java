@@ -14,7 +14,7 @@ public class FeatureUtils {
 		// Convert to byte table
 		List<Feature> features = new ArrayList<Feature>();
 		for (Keypoint keypoint : keypoints) {
-			Feature feature = new Feature(keypoint.ivec);
+			Feature feature = new Feature(toDoubleArray(keypoint.ivec));
 			features.add(feature);
 		}
 
@@ -26,32 +26,48 @@ public class FeatureUtils {
 		List<Keypoint> keypoints = new ArrayList<Keypoint>();
 		for (Feature feature : features) {
 			Keypoint keypoint = new Keypoint();
-			keypoint.ivec = feature.getData();
+			keypoint.ivec = toByteArray(feature.getData());
 			keypoints.add(keypoint);
 		}
 
 		return keypoints;
 	}
 
-	public static byte[][] toByteArray(List<Feature> features) {
-		byte[][] bytes = new byte[features.size()][];
+	public static double[][] toArray(List<Feature> features) {
+		double[][] data = new double[features.size()][];
 
 		int i = 0;
 		for (Feature feature : features) {
-			bytes[i] = feature.getData();
+			data[i] = feature.getData();
 			i++;
 		}
 
-		return bytes;
+		return data;
 	}
 
-	public static List<Feature> toFeatureList(byte[][] features) {
+	public static List<Feature> toFeatureList(double[][] features) {
 		List<Feature> featureList = new ArrayList<Feature>();
 
-		for (byte[] feature : features) {
+		for (double[] feature : features) {
 			featureList.add(new Feature(feature));
 		}
 
 		return featureList;
+	}
+
+	public static double[] toDoubleArray(byte[] bytes) {
+		double[] result = new double[bytes.length];
+		for (int i = 0; i < bytes.length; i++) {
+			result[i] = (double) bytes[i];
+		}
+		return result;
+	}
+
+	public static byte[] toByteArray(double[] doubles) {
+		byte[] result = new byte[doubles.length];
+		for (int i = 0; i < doubles.length; i++) {
+			result[i] = (byte) doubles[i];
+		}
+		return result;
 	}
 }

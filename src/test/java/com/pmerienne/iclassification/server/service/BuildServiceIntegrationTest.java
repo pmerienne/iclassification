@@ -61,6 +61,6 @@ public class BuildServiceIntegrationTest extends IntegrationTest {
 		assertNotNull(build);
 
 		// Wait 3 minutes
-		 Thread.sleep(3 * 60 * 1000);
+		 Thread.sleep(2 * 60 * 1000);
 	}
 }

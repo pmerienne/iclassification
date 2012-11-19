@@ -24,7 +24,7 @@ public class HSVColorFeatureExtractor extends AbstractJFeatureExtractor implemen
 
 	static {
 		LIB_PROPERTIES.setProperty(LibProperties.HISTOGRAMS_TYPE, "HSB");
-		LIB_PROPERTIES.setProperty(LibProperties.HISTOGRAMS_BINS, "64");
+//		LIB_PROPERTIES.setProperty(LibProperties.HISTOGRAMS_BINS, "64");
 	}
 
 	@Override

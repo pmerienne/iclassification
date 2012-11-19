@@ -8,7 +8,7 @@ JETTY_MAXIDLETIME=30000
 JETTY_HOME="."
 
 JETTY_OPTS="-Djetty.host=${JETTY_HOST} -Djetty.port=${JETTY_PORT} -Djetty.minThreads=${JETTY_MINTHREADS} -Djetty.maxThreads=${JETTY_MAXTHREADS} -Djetty.maxIdleTime=${JETTY_MAXIDLETIME} -Djetty.home=${JETTY_HOME}"
-JAVA_OPTS="-server -Xms512M -Xmx1024M ${JAVA_OPTS}"
+JAVA_OPTS="-server -Xms512M -Xmx2048M ${JAVA_OPTS}"
 
 JETTY_LIB="lib/jetty-start-7.4.5.v20110725.jar"
 JETTY_CONFIG="resources/jetty.xml"

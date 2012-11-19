@@ -14,4 +14,8 @@ public class ImageUtils {
 	public static String getSegmentedImageUrl(ImageMetadata imageMetadata) {
 		return BASE_URL + imageMetadata.getFilename() + "/segmentedFile";
 	}
+
+	public static String getFeatureImageUrl(ImageMetadata imageMetadata) {
+		return BASE_URL + imageMetadata.getFilename() + "/featureFile";
+	}
 }

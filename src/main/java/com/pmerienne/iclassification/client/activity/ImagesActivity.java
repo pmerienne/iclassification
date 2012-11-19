@@ -7,13 +7,13 @@ import org.fusesource.restygwt.client.MethodCallback;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.pmerienne.iclassification.client.event.WorkspaceLoadedEvent;
 import com.pmerienne.iclassification.client.factory.ClientFactory;
 import com.pmerienne.iclassification.client.service.Services;
 import com.pmerienne.iclassification.client.utils.Notifications;
 import com.pmerienne.iclassification.client.view.ImagesView;
-import com.pmerienne.iclassification.shared.model.CropZone;
 import com.pmerienne.iclassification.shared.model.ImageLabel;
 import com.pmerienne.iclassification.shared.model.ImageMetadata;
 import com.pmerienne.iclassification.shared.model.Workspace;
@@ -74,38 +74,6 @@ public class ImagesActivity extends AbstractActivity implements ImagesView.Prese
 		});
 	}
 
-	@Override
-	public void remove(final Workspace workspace, final ImageMetadata imageMetadata) {
-		Services.getImageService().remove(workspace.getId(), imageMetadata.getFilename(), new MethodCallback<Void>() {
-			@Override
-			public void onSuccess(Method arg0, Void arg1) {
-				Notifications.info("Image removed from workspace");
-			}
-
-			@Override
-			public void onFailure(Method arg0, Throwable t) {
-				Notifications.error("Unable to remove image. Cause : " + t.getMessage());
-			}
-		});
-
-	}
-
-	@Override
-	public void setCropZone(final Workspace workspace, final ImageMetadata imageMetadata, final CropZone cropZone) {
-		Services.getImageService().setCropZone(workspace.getId(), imageMetadata.getFilename(), cropZone, new MethodCallback<ImageMetadata>() {
-			@Override
-			public void onSuccess(Method arg0, ImageMetadata newImage) {
-				imageMetadata.setCropZone(cropZone);
-				Notifications.info("Crop zone saved");
-			}
-
-			@Override
-			public void onFailure(Method arg0, Throwable t) {
-				Notifications.error("Unable to crop image. Cause : " + t.getMessage());
-			}
-		});
-	}
-
 	private void loadWorkspace(String workspaceId) {
 		Services.getWorkspaceService().find(workspaceId, new MethodCallback<Workspace>() {
 			@Override
@@ -124,7 +92,10 @@ public class ImagesActivity extends AbstractActivity implements ImagesView.Prese
 				Notifications.error("Workspace cannot be loaded. Cause : " + ex.getMessage());
 			}
 		});
-
 	}
 
+	@Override
+	public void goTo(Place newPlace) {
+		this.clientFactory.getPlaceController().goTo(newPlace);
+	}
 }

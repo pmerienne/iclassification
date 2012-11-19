@@ -9,15 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pmerienne.iclassification.server.core.FeatureExtractor;
+import com.pmerienne.iclassification.server.core.FeatureImage;
 import com.pmerienne.iclassification.server.core.HSVColorFeatureExtractor;
 import com.pmerienne.iclassification.server.core.RGBColorFeatureExtractor;
 import com.pmerienne.iclassification.server.core.SiftFeatureExtractor;
 import com.pmerienne.iclassification.server.core.SurfFeatureExtractor;
+import com.pmerienne.iclassification.server.repository.FeatureImageRepository;
 import com.pmerienne.iclassification.server.repository.FeatureRepository;
 import com.pmerienne.iclassification.server.repository.FileRepository;
 import com.pmerienne.iclassification.server.repository.ImageRepository;
 import com.pmerienne.iclassification.shared.model.Feature;
 import com.pmerienne.iclassification.shared.model.FeatureConfiguration;
+import com.pmerienne.iclassification.shared.model.FeatureType;
 import com.pmerienne.iclassification.shared.model.ImageMetadata;
 
 @Service
@@ -49,6 +52,9 @@ public class FeatureServiceImpl implements FeatureService {
 	@Autowired
 	private ImageService imageService;
 
+	@Autowired
+	private FeatureImageRepository featureImageRepository;
+
 	@Override
 	public List<Feature> getFeatures(ImageMetadata imageMetadata, FeatureConfiguration fc) {
 		List<Feature> features = null;
@@ -57,8 +63,7 @@ public class FeatureServiceImpl implements FeatureService {
 			// Load image from database
 			imageMetadata = this.imageRepository.findOne(imageMetadata.getFilename());
 			File file = this.fileRepository.get(imageMetadata.getFilename());
-			features = this.featureRepository.findByFilenameAndTypeAndUseCropZone(imageMetadata.getFilename(),
-					fc.getType(), fc.isUseCropZone());
+			features = this.featureRepository.findByFilenameAndTypeAndUseCropZone(imageMetadata.getFilename(), fc.getType(), fc.isUseCropZone());
 
 			// If the features doesn't exists, we compute it!
 			if (features == null || features.isEmpty()) {
@@ -88,11 +93,57 @@ public class FeatureServiceImpl implements FeatureService {
 
 	@Override
 	public List<Feature> computeFeatures(File image, FeatureConfiguration featureConfiguration) {
-		List<Feature> features = null;
-
 		// Get extractor according to feature type
+		FeatureExtractor extractor = this.getFeatureExtractor(featureConfiguration.getType());
+
+		// Extract and retur features
+		List<Feature> features = extractor.getFeatures(image);
+		return features;
+	}
+
+	@Override
+	public File getFeatureFile(ImageMetadata imageMetadata, FeatureType featureType, boolean useCropZone) throws IOException {
+		File featureFile = null;
+
+		FeatureImage featureImage = this.featureImageRepository.findByOriginalImageAndFeatureTypeAndUseCropZone(imageMetadata, featureType, useCropZone);
+		if (featureFile == null) {
+			File inputFile = this.fileRepository.get(imageMetadata.getFilename());
+
+			// Create feature file
+			FeatureExtractor extractor = this.getFeatureExtractor(featureType);
+			featureFile = extractor.createFeatureImage(inputFile);
+
+			String filename = this.fileRepository.save(featureFile);
+			featureImage = new FeatureImage(filename, imageMetadata, featureType, useCropZone);
+			this.featureImageRepository.save(featureImage);
+		}
+
+		featureFile = this.fileRepository.get(featureImage.getFilename());
+
+		return featureFile;
+	}
+
+	@Override
+	public void clearFeatures(ImageMetadata imageMetadata) {
+		String filename = imageMetadata.getFilename();
+
+		// Remove calculated features
+		List<Feature> features = this.featureRepository.findByFilename(filename);
+		if (features != null && !features.isEmpty()) {
+			this.featureRepository.delete(features);
+		}
+
+		// Remove calculated feature images
+		List<FeatureImage> featureImages = this.featureImageRepository.findByOriginalImage(imageMetadata);
+		for (FeatureImage featureImage : featureImages) {
+			this.fileRepository.delete(featureImage.getFilename());
+			this.featureImageRepository.delete(featureImage);
+		}
+	}
+
+	protected FeatureExtractor getFeatureExtractor(FeatureType featureType) {
 		FeatureExtractor extractor = null;
-		switch (featureConfiguration.getType()) {
+		switch (featureType) {
 		case SIFT:
 			extractor = this.siftFeatureExtractor;
 			break;
@@ -107,17 +158,6 @@ public class FeatureServiceImpl implements FeatureService {
 			break;
 		}
 
-		// Extract and retur features
-		features = extractor.getFeatures(image);
-		return features;
-	}
-
-	@Override
-	public void clearFeatures(ImageMetadata imageMetadata) {
-		String filename = imageMetadata.getFilename();
-		List<Feature> features = this.featureRepository.findByFilename(filename);
-		if (features != null && !features.isEmpty()) {
-			this.featureRepository.delete(features);
-		}
+		return extractor;
 	}
 }
