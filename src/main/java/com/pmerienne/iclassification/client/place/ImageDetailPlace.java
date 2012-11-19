@@ -29,7 +29,7 @@ public class ImageDetailPlace extends Place {
 		public ImageDetailPlace getPlace(String token) {
 			String[] tokens = token.split(":");
 			String workspaceId = tokens[0];
-			String imageId = tokens[0];
+			String imageId = tokens[1];
 			return new ImageDetailPlace(workspaceId, imageId);
 		}
 

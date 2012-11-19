@@ -20,7 +20,6 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 
-import com.pmerienne.iclassification.server.service.DatasetService;
 import com.pmerienne.iclassification.server.service.FeatureService;
 import com.pmerienne.iclassification.server.service.ImageLabelService;
 import com.pmerienne.iclassification.server.service.ImageService;
@@ -44,9 +43,6 @@ public class ImagesResource {
 
 	@InjectParam
 	private WorkspaceService workspaceService;
-
-	@InjectParam
-	private DatasetService datasetService;
 
 	@InjectParam
 	private ImageLabelService imageLabelService;

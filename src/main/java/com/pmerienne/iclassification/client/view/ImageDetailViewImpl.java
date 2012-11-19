@@ -1,10 +1,9 @@
 package com.pmerienne.iclassification.client.view;
 
+import com.github.gwtbootstrap.client.ui.CheckBox;
 import com.github.gwtbootstrap.client.ui.Image;
-import com.github.gwtbootstrap.client.ui.ListBox;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -15,7 +14,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.pmerienne.iclassification.client.place.ImagesPlace;
 import com.pmerienne.iclassification.client.utils.ImageUtils;
 import com.pmerienne.iclassification.client.widget.CroppedImage;
+import com.pmerienne.iclassification.client.widget.FeatureTypeListBox;
 import com.pmerienne.iclassification.shared.model.CropZone;
+import com.pmerienne.iclassification.shared.model.FeatureType;
 import com.pmerienne.iclassification.shared.model.ImageMetadata;
 import com.pmerienne.iclassification.shared.model.Workspace;
 
@@ -28,8 +29,11 @@ public class ImageDetailViewImpl extends Composite implements ImageDetailView {
 
 	@UiField
 	HTMLPanel imageContainer;
-	
+
 	private CroppedImage originalImage;
+
+	@UiField
+	HeadingElement heading;
 
 	@UiField
 	Image segmentedImage;
@@ -38,7 +42,10 @@ public class ImageDetailViewImpl extends Composite implements ImageDetailView {
 	Image featureImage;
 
 	@UiField
-	ListBox imageTypeListBox;
+	FeatureTypeListBox featureTypeListBox;
+
+	@UiField
+	CheckBox useCropZone;
 
 	private Presenter presenter;
 
@@ -48,18 +55,6 @@ public class ImageDetailViewImpl extends Composite implements ImageDetailView {
 
 	public ImageDetailViewImpl() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		// Init image type
-		this.imageTypeListBox.addItem("Original image");
-		this.imageTypeListBox.addItem("Segmented image");
-		// this.imageTypeListBox.addItem("Image with features");
-
-		this.imageTypeListBox.addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				ImageDetailViewImpl.this.reloadImage();
-			}
-		});
 	}
 
 	@UiHandler("cancelButton")
@@ -94,12 +89,13 @@ public class ImageDetailViewImpl extends Composite implements ImageDetailView {
 	@Override
 	public void setImage(ImageMetadata image) {
 		this.image = image;
+		this.heading.setInnerHTML(image.getFilename() + " (" + image.getLabel().getName() + ")");
 		this.reloadImage();
 	}
 
 	protected void reloadImage() {
 		this.imageContainer.clear();
-		
+
 		String originalUrl = ImageUtils.getImageUrl(this.image);
 		this.originalImage = new CroppedImage(originalUrl);
 		this.originalImage.setCropZone(this.image.getCropZone());
@@ -107,8 +103,10 @@ public class ImageDetailViewImpl extends Composite implements ImageDetailView {
 
 		String segmentedUrl = ImageUtils.getSegmentedImageUrl(this.image);
 		this.segmentedImage.setUrl(segmentedUrl);
-		
-		String featureUrl = ImageUtils.getFeatureImageUrl(this.image);
+
+		FeatureType featureType = this.featureTypeListBox.getSelected();
+		boolean useCropZone = this.useCropZone.getValue();
+		String featureUrl = ImageUtils.getFeatureImageUrl(this.image, featureType, useCropZone);
 		this.featureImage.setUrl(featureUrl);
 	}
 

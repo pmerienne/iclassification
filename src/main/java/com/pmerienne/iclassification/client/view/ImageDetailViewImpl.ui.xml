@@ -10,16 +10,37 @@
 
 		<b:Row>
 			<b:Column size="4">
+				<b:Heading size="2">Orinal image</b:Heading>
 				<g:HTMLPanel ui:field="imageContainer" />
 			</b:Column>
 
 			<b:Column size="4">
+				<b:Heading size="2">Segmented image</b:Heading>
 				<b:Image ui:field="segmentedImage" />
-				<b:ListBox ui:field="imageTypeListBox" />
 			</b:Column>
 
 			<b:Column size="4">
+				<b:Heading size="2">Features</b:Heading>
 				<b:Image ui:field="featureImage" />
+				
+				<!-- Feature form -->
+				<b:Form type="HORIZONTAL">
+					<b:Fieldset>
+						<b:ControlGroup>
+							<b:ControlLabel>Type</b:ControlLabel>
+							<b:Controls>
+								<w:FeatureTypeListBox ui:field="featureTypeListBox" />
+							</b:Controls>
+						</b:ControlGroup>
+
+						<b:ControlGroup>
+							<b:ControlLabel>Use crop zone</b:ControlLabel>
+							<b:Controls>
+								<b:CheckBox ui:field="useCropZone"></b:CheckBox>
+							</b:Controls>
+						</b:ControlGroup>
+					</b:Fieldset>
+				</b:Form>
 			</b:Column>
 		</b:Row>
 

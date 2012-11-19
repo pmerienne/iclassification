@@ -1,6 +1,7 @@
 package com.pmerienne.iclassification.client.utils;
 
 import com.google.gwt.core.client.GWT;
+import com.pmerienne.iclassification.shared.model.FeatureType;
 import com.pmerienne.iclassification.shared.model.ImageMetadata;
 
 public class ImageUtils {
@@ -15,7 +16,7 @@ public class ImageUtils {
 		return BASE_URL + imageMetadata.getFilename() + "/segmentedFile";
 	}
 
-	public static String getFeatureImageUrl(ImageMetadata imageMetadata) {
-		return BASE_URL + imageMetadata.getFilename() + "/featureFile";
+	public static String getFeatureImageUrl(ImageMetadata imageMetadata, FeatureType featureType, boolean useCropZone) {
+		return BASE_URL + imageMetadata.getFilename() + "/featureFile" + "?type=" + featureType.name() + "&useCropZone=" + useCropZone;
 	}
 }

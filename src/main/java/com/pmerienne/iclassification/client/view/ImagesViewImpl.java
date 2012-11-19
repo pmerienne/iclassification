@@ -60,7 +60,7 @@ public class ImagesViewImpl extends Composite implements ImagesView {
 	private Map<ImageMetadata, ImageThumbnail> visibleImages = new HashMap<ImageMetadata, ImageThumbnail>();
 
 	private int currentIndex = 0;
-	private final static int STEP = 5;
+	private final static int STEP = 20;
 
 	public ImagesViewImpl() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -69,7 +69,8 @@ public class ImagesViewImpl extends Composite implements ImagesView {
 		this.scrollPanel.addScrollHandler(new ScrollHandler() {
 			@Override
 			public void onScroll(ScrollEvent event) {
-				if (ImagesViewImpl.this.scrollPanel.getVerticalScrollPosition() == ImagesViewImpl.this.scrollPanel.getMaximumVerticalScrollPosition()) {
+				boolean mustShowMoreImages = ImagesViewImpl.this.isScrollAtMax();
+				if (mustShowMoreImages) {
 					ImagesViewImpl.this.showMoreImages();
 				}
 			}
@@ -90,10 +91,19 @@ public class ImagesViewImpl extends Composite implements ImagesView {
 
 			this.currentIndex += STEP;
 
-			if (ImagesViewImpl.this.scrollPanel.getVerticalScrollPosition() == ImagesViewImpl.this.scrollPanel.getMaximumVerticalScrollPosition()) {
-				this.showMoreImages();
-			}
+//			boolean mustShowMoreImages = this.isScrollAtMax();
+//			if (mustShowMoreImages) {
+//				this.showMoreImages();
+//			}
 		}
+	}
+	
+	protected boolean isScrollAtMax() {
+		this.scrollPanel.onResize();
+		int verticalScrollPosition = this.scrollPanel.getVerticalScrollPosition();
+		int maxVerticalScrollPosition = this.scrollPanel.getMaximumVerticalScrollPosition();
+
+		return verticalScrollPosition == maxVerticalScrollPosition;
 	}
 
 	@UiHandler("importFromZipButton")

@@ -97,8 +97,12 @@ public class ImageDetailActivity extends AbstractActivity implements ImageDetail
 		Services.getImageService().find(imageId, new MethodCallback<ImageMetadata>() {
 			@Override
 			public void onSuccess(Method method, ImageMetadata image) {
-				ImageDetailView view = clientFactory.getImageDetailView();
-				view.setImage(image);
+				if (image != null) {
+					ImageDetailView view = clientFactory.getImageDetailView();
+					view.setImage(image);
+				} else {
+					Notifications.error("Image not found");
+				}
 			}
 
 			@Override
