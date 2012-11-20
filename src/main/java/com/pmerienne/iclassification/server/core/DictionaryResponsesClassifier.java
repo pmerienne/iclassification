@@ -47,7 +47,7 @@ public class DictionaryResponsesClassifier {
 			}
 
 			String featureName = this.getFeatureName(dictionary);
-			if (this.features.contains(featureName)) {
+			if (!this.features.contains(featureName)) {
 				this.features.add(featureName);
 				attributes.addElement(new Attribute(featureName));
 			}

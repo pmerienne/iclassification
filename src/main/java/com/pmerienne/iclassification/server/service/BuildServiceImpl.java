@@ -76,6 +76,7 @@ public class BuildServiceImpl implements BuildService {
 
 	@Override
 	public Build createBuild(final Workspace workspace, final List<FeatureConfiguration> featureConfigurations) {
+//		featureConfigurations.add(new FeatureConfiguration(com.pmerienne.iclassification.shared.model.FeatureType.HSV_COLOR, true, 20));
 		final Build build = new Build(workspace, featureConfigurations);
 		this.buildRepository.save(build);
 

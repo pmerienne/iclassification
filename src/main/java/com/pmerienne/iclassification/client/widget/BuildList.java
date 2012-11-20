@@ -2,6 +2,7 @@ package com.pmerienne.iclassification.client.widget;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellList;
 import com.pmerienne.iclassification.shared.model.Build;
@@ -10,6 +11,8 @@ import com.pmerienne.iclassification.shared.model.Build.State;
 public class BuildList extends CellList<Build> {
 
 	private final static DateTimeFormat TIME_FORMAT = DateTimeFormat.getFormat("yyyy/mm/dd");
+
+	private final static NumberFormat NUMBER_FORMAT = NumberFormat.getPercentFormat();
 
 	public BuildList() {
 		super(new BuildCell());
@@ -24,9 +27,9 @@ public class BuildList extends CellList<Build> {
 			sb.appendEscaped(TIME_FORMAT.format(build.getDate()));
 			sb.appendHtmlConstant("</p>");
 			sb.appendHtmlConstant("<p>");
-			if (State.FINISH.equals(build.getState())) {
+			if (State.FINISH.equals(build.getState()) && build.getClassificationEvaluation() != null) {
 				sb.appendEscaped("Success rate : ");
-				sb.appendEscaped(Double.toString(build.getClassificationEvaluation().successRate()));
+				sb.appendEscaped(NUMBER_FORMAT.format(build.getClassificationEvaluation().successRate()));
 				sb.appendHtmlConstant("%");
 			} else {
 				sb.appendEscaped(build.getState().name());
