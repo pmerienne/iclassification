@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class ZipUtilsTest {
 
-	private final static File ZIP_FILE = new File("src/test/resources/data/dataset-min.zip");
+	private final static File ZIP_FILE = new File("src/test/resources/data/dataset-flowers.min.zip");
 	private final static File TEST_DIRECTORY = new File("src/test/resources/");
 
 	@Test

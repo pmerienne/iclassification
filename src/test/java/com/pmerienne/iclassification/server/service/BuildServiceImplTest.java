@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -17,8 +18,11 @@ import com.pmerienne.iclassification.server.core.Dataset;
 import com.pmerienne.iclassification.server.repository.BuildRepository;
 import com.pmerienne.iclassification.shared.model.Build;
 import com.pmerienne.iclassification.shared.model.Dictionary;
+import com.pmerienne.iclassification.shared.model.FeatureType;
+import com.pmerienne.iclassification.shared.model.Workspace;
 import com.pmerienne.iclassification.shared.model.Build.State;
 import com.pmerienne.iclassification.shared.model.ClassificationEvaluation;
+import com.pmerienne.iclassification.shared.model.FeatureConfiguration;
 
 public class BuildServiceImplTest {
 
@@ -59,7 +63,10 @@ public class BuildServiceImplTest {
 		Dataset dataset = new Dataset();
 
 		List<Dictionary> dictionaries = new ArrayList<Dictionary>();
-		Build build = new Build(null, null);
+		List<FeatureConfiguration> fcs = Arrays.asList(new FeatureConfiguration(FeatureType.HSV_COLOR, true, 10));
+		Workspace workspace = new Workspace("3543213", "test");
+
+		Build build = new Build(workspace, fcs);
 		build.setDictionaries(dictionaries);
 
 		// Mock call
@@ -80,7 +87,10 @@ public class BuildServiceImplTest {
 		Dataset dataset = new Dataset();
 
 		List<Dictionary> dictionaries = new ArrayList<Dictionary>();
-		Build build = new Build(null, null);
+		List<FeatureConfiguration> fcs = Arrays.asList(new FeatureConfiguration(FeatureType.HSV_COLOR, true, 10));
+		Workspace workspace = new Workspace("3543213", "test");
+
+		Build build = new Build(workspace, fcs);
 		build.setDictionaries(dictionaries);
 
 		// Mock call
