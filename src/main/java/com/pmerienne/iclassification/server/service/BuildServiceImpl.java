@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.pmerienne.iclassification.server.core.ClassificationException;
 import com.pmerienne.iclassification.server.core.Dataset;
 import com.pmerienne.iclassification.server.core.SameLabelPredicate;
 import com.pmerienne.iclassification.server.repository.BuildRepository;
@@ -135,7 +134,7 @@ public class BuildServiceImpl implements BuildService {
 			build.setState(State.FINISH);
 			this.buildRepository.save(build);
 
-		} catch (ClassificationException e) {
+		} catch (Exception e) {
 			LOGGER.error("An error occured while evaluating classifier : " + e.getMessage(), e);
 			build.setState(State.FAILED);
 			this.buildRepository.save(build);
