@@ -46,7 +46,7 @@ public class ImageSegmenter {
 		// Use the mask with a siox algorithme
 		BufferedImage output = this.applySiox(input, mask, cropZone);
 
-		// Create temporary png file
+		// Create temporary jpg file
 		File outputFile = File.createTempFile("segment-", ".tmp.png");
 		ImageIO.write(output, "png", outputFile);
 

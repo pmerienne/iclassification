@@ -3,6 +3,7 @@ package com.pmerienne.iclassification.server.repository;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,15 +12,26 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Repository;
 
+import com.pmerienne.iclassification.server.util.ImageUtils;
+
 @Repository
 public class FileRepositoryImpl implements FileRepository, InitializingBean {
 
 	private final static File FILE_DIRECTORY = new File("/data/iclassification/images");
 
+	private final static List<String> JPEG_EXT = Arrays.asList("jpg", "jpeg");
+
 	@Override
 	public String save(File file) {
 		try {
 			String ext = FilenameUtils.getExtension(file.getAbsolutePath());
+
+			// Convert to jpeg
+			if (!JPEG_EXT.contains(ext.toLowerCase())) {
+				file = ImageUtils.convertToJpg(file);
+				ext = FilenameUtils.getExtension(file.getAbsolutePath());
+			}
+
 			String filename = String.valueOf(FileUtils.checksumCRC32(file)) + "." + ext;
 
 			File destFile = new File(FILE_DIRECTORY, filename);

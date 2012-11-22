@@ -1,6 +1,8 @@
 package com.pmerienne.iclassification.server.util;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -10,6 +12,20 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
 public class ImageUtils {
+
+	public static File convertToJpg(File inputFile) throws IOException {
+		File outputFile = File.createTempFile("tojpg-", ".tmp.jpg");
+
+		BufferedImage bufferedImage = ImageIO.read(inputFile);
+
+		// create a blank, RGB, same width and height, and a white background
+		BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+		newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
+
+		// write to jpeg file
+		ImageIO.write(newBufferedImage, "jpg", outputFile);
+		return outputFile;
+	}
 
 	public static String getFormatName(File file) {
 		String extension = null;

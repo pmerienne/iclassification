@@ -62,7 +62,7 @@ public class CroppedImage extends Image {
 		var options = {
 			onChange : update,
 			onSelect : update,
-			boxWidth : 400
+			boxWidth : 200
 		};
 
 		$wnd.$(element).Jcrop(options, onReady);

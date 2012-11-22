@@ -9,17 +9,17 @@
 		<h1 ui:field="heading" />
 
 		<b:Row>
-			<b:Column size="4">
+			<b:Column size="5">
 				<b:Heading size="2">Orinal image</b:Heading>
 				<g:HTMLPanel ui:field="imageContainer" />
 			</b:Column>
 
-			<b:Column size="4">
+			<b:Column size="5">
 				<b:Heading size="2">Segmented image</b:Heading>
 				<b:Image ui:field="segmentedImage" />
 			</b:Column>
 
-			<b:Column size="4">
+			<b:Column size="5">
 				<b:Heading size="2">Features</b:Heading>
 				<b:Image ui:field="featureImage" />
 				

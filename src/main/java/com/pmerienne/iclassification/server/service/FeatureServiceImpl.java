@@ -107,7 +107,13 @@ public class FeatureServiceImpl implements FeatureService {
 
 		FeatureImage featureImage = this.featureImageRepository.findByOriginalImageAndFeatureTypeAndUseCropZone(imageMetadata, featureType, useCropZone);
 		if (featureFile == null) {
-			File inputFile = this.fileRepository.get(imageMetadata.getFilename());
+			LOGGER.info("Creating image with features (" + featureType + ", crop : " + useCropZone + ") for " + imageMetadata.getFilename());
+			File inputFile;
+			if (useCropZone) {
+				inputFile = this.imageService.getSegmentedFile(imageMetadata);
+			} else {
+				inputFile = this.fileRepository.get(imageMetadata.getFilename());
+			}
 
 			// Create feature file
 			FeatureExtractor extractor = this.getFeatureExtractor(featureType);

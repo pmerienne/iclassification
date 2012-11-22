@@ -113,7 +113,7 @@ public class ImagesResource {
 	@GET
 	@Path("{id}/featureFile")
 	@Produces("image/*")
-	public Response getSegmentedFile(@PathParam("id") String id, @QueryParam("type") String type, @QueryParam("useCropZone") boolean useCropZone) throws FileNotFoundException {
+	public Response getFeatureFile(@PathParam("id") String id, @QueryParam("type") String type, @QueryParam("useCropZone") boolean useCropZone) throws FileNotFoundException {
 		ImageMetadata metadata = this.imageService.findById(id);
 		if (metadata == null) {
 			return Response.status(Status.NOT_FOUND).entity("Image " + id + " not found").build();
